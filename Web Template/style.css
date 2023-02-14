@@ -1,0 +1,8 @@
+.navbar {
+    list-style: none;
+    overflow: hidden;
+}
+li{
+    display: inline-block;
+    margin-left: 3%;
+}
