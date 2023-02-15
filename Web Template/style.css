@@ -53,3 +53,45 @@ body{
     border-radius: .7em;
     font-size: 1.3em;
 }
+
+
+.LoginBox{
+    margin-top: 5%;
+    margin-left: 35%;
+    margin-right: 35%;
+    background-color: #272727;
+    padding: 25px;
+    border-radius: .7em;
+    font-size: 1.3em;
+}
+
+.LoginText{
+    width: 50%;
+    padding:10px;
+    margin-bottom: 5%;
+}
+.LoginBox button{
+    padding: 10px;
+    font-size: 1.1em;
+    background-color: #208aae;
+    border-radius: .3em;
+    color:#F9EBE0;
+    border-color: #1b7391;
+}
+#signup{
+    display: none;
+}
+#signin{
+    display: block;
+}
+
+.db{
+    
+}
+
+.db th{
+    font-size: 2em;
+}
+.db td{
+    font-size: 1.5em;
+}
