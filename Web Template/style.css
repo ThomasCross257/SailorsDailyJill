@@ -20,11 +20,10 @@ li{
     margin-left: 15%;
     margin-right: 5%;
     font-size: 1.5em;
-    color: #F9EBE0
+    color: #F9EBE0  
 }
 li:hover{
-    background-color: #0D2149;
-    color: #FF312E;
+    text-shadow: #FF312E 1px 0 10px;
 }
 li a{
     text-decoration: none;
@@ -86,6 +85,11 @@ body{
 }
 
 .db{
+    margin: auto;
+    width: 50%;
+}
+
+.db tr{
     
 }
 
@@ -94,4 +98,16 @@ body{
 }
 .db td{
     font-size: 1.5em;
+}
+#DB_Entry{
+    background-color:#1b7391;
+    border: none;
+    font: inherit;
+    font-size: 30px;
+    margin-left: 10%;
+    
+}
+#DB_Entry:focus{
+    background-color: #11495c;
+    
 }

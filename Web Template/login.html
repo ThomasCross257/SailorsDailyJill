@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
     <link href="style.css" rel="stylesheet">  
+    <script src="script.js"></script>
     <title>Login</title>
 </head>
 <body>
@@ -20,25 +21,25 @@
             <a href="database.html"><li id="user">Database</li></a>
         </ul>
     </div>
-    <div class="LoginBox" id="signin">
+    <div class="LoginBox" id="signin" style="display: block;">
         <label><h2>User:</h2></label>
-        <input class="LoginText" type="password" placeholder="Enter Username" required>
+        <input id="signin_username" class="LoginText" type="password" placeholder="Enter Username" required>
         <label><h2>Password:</h2></label>
-        <input class="LoginText" type="password" placeholder="Enter Password" required>
+        <input id="signin_passord" class="LoginText" type="password" placeholder="Enter Password" required>
         <br>
         <button>Sign In</button>
-        <h5>Don't have an <a href="signup.html">account?</a></h5>
+        <h5>Don't have an account? <br><br> <button onclick="loginSwap()">Sign up</button></h5>
     </div>
-    <div class="LoginBox" id="signup">
+    <div class="LoginBox" id="signup" style="display: none;">
         <label><h2>User:</h2></label>
-        <input class="LoginText" type="password" placeholder="Enter Username" required>
+        <input id="signup_user" class="LoginText" type="password" placeholder="Enter Username" required>
         <label><h2>Email:</h2></label>
-        <input class="LoginText" type="password" placeholder="Enter Email" required>
+        <input id="signup_email" class="LoginText" type="password" placeholder="Enter Email" required>
         <label><h2>Password:</h2></label>
-        <input class="LoginText" type="password" placeholder="Enter Password" required>
+        <input id = "signup_email" class="LoginText" type="password" placeholder="Enter Password" required>
         <br>
         <button>Sign Up</button>
-        <h5>Already have an <a href="login.html">account?</a></h5>
+        <h5>Already have an account? <button onclick="loginSwap()">Sign in</button></h5>
     </div> 
 </body>
 </html>
