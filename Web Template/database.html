@@ -8,33 +8,54 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
-    <title>Home</title>
+    <script src="script.js"></script>
+    <title>Database</title>
 </head>
 <body>
     <div class="head">
-        <h1>Welcome</h1>
+        <h1>Database</h1>
         <ul class="navbar">
             <a href="index.html"><li id="uni">Home</li></a>
             <a href="login.html"><li id="guest">Login</li></a>
-            <a href="javascript:void(0)"><li id="user">Logout</li></a>
+            <a href="logout.html"><li id="user">Logout</li></a>
             <a href="database.html"><li id="user">Database</li></a>
         </ul>
     </div>
-    <button id="DB_Entry">New Entry</button>
-    <div class="db">
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Department</th>
-                <th>Owner</th>
-            </tr>
-            <tr>
-                <td>Lorem Ipsum</td>
-                <td>Lorem Ipsum</td>
-                <td>Lorem Ipsum</td>
-            </tr>
-        </table>
-
+    
+    
+    <div id="db_Broad" style="display: block;">
+        <button id="Enter" class="DB_Button" style="margin-left:10%;" onclick="DB_EntrySwap(this.id);" style="display: block;">New Entry</button>
+        <input id="db_Search" class="textBox" type="text" placeholder="Search">
+        <button id="SearchBtn" class="DB_Button" onclick="javascript:void(0);" style="display: inline-block">Search</button>
+        <div id="db_Page">
+            <table>
+                <div>
+                <tr>
+                    <th>Username</th>
+                    <th>2FA</th>
+                    <th>Blog URL</th>
+                </tr>
+                <tr>
+                    <td>JohnDoe123</td>
+                    <td>Yes</td>
+                    <td><a href="javascript:void(0)">Here</a></td>
+                </tr>
+                </div>
+            </table>
+        </div>
+    </div>
+    
+    <div id="new_Entry" style="display: none">
+        <button id="Return" class="DB_Button" onclick="DB_EntrySwap(this.id)">Back to DB</button>
+        <label><h2>Username:</h2></label>
+        <input id="db_Username" class="textBox" type="text" placeholder="Username" required>
+        <label><h2>2FA:</h2></label>
+        <input id="db_2FA" class="selector" type="checkbox" placeholder="2FA">
+        <label><h2>Blog URL:</h2></label>
+        <input id="db_Blog" class="textBox" type="text" placeholder="Blog">
+        <br>
+        <br>
+        <button id="Submit"class="DB_Button" onclick="DB_EntrySwap(this.id)" style="display:block;">Submit</button>
     </div>
 
 </body>

@@ -44,7 +44,6 @@ body{
 }
 
 .bodytext{
-    margin-top: -.7%;
     margin-left: 25%;
     margin-right: 25%;
     background-color: #272727;
@@ -84,30 +83,65 @@ body{
     display: block;
 }
 
-.db{
+#db_Page{
     margin: auto;
     width: 50%;
+    border: 3px black;
+    border-style: solid;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    display:block;
 }
 
-.db tr{
-    
+#db_Page tr{
+    padding: 2px;
 }
 
-.db th{
+#db_Page th{
     font-size: 2em;
 }
-.db td{
-    font-size: 1.5em;
+#db_Page td{
+    padding: 10px;
+    font-size: 2em;
+    border: 3px black;
+    border-style: solid;
 }
-#DB_Entry{
+.DB_Button{
     background-color:#1b7391;
     border: none;
     font: inherit;
     font-size: 30px;
-    margin-left: 10%;
     
 }
-#DB_Entry:focus{
+.DB_Button:focus{
     background-color: #11495c;
     
 }
+
+#new_Entry{
+    margin-top: 2%;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #272727;
+    padding: 25px;
+    border-radius: .7em;
+    font-size: 1.3em;
+}
+
+.textBox{
+    width:25%;
+    height:40px;
+}
+
+.selector{
+    width: 3%;
+    height:40px;
+}
+
+#db_Search{
+    height: 40px;
+    margin-left:45%;
+}
+
