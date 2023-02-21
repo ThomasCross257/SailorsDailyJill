@@ -21,15 +21,17 @@
             <a href="database"><li id="user">Database</li></a>
         </ul>
     </div>
-    <div class="LoginBox"  style="display: block;">
+    <div class="LoginBox">
         <form action="#" method="post">
             <label><h2>User:</h2></label>
-            <input name="signin_username" class="LoginText" type="text" placeholder="Enter Username" required>
+            <input name="signup_user" class="LoginText" type="text" placeholder="Enter Username" required>
+            <label><h2>Email:</h2></label>
+            <input name="signup_email" class="LoginText" type="text" placeholder="Enter Email" required>
             <label><h2>Password:</h2></label>
-            <input name="signin_passord" class="LoginText" type="password" placeholder="Enter Password" required>
+            <input name = "signup_password" class="LoginText" type="password" placeholder="Enter Password" required>
             <br>
-            <button class="BlueBtn">Sign In</button>
-            <h5>Don't have an account? <br><br> <button class="BlueBtn" onclick="location.href='signup'">Sign up</button></h5>
+            <button class="BlueBtn">Sign Up</button>
+            <h5>Already have an account? <button class="BlueBtn" onclick="location.href='login'">Sign in</button></h5>
         </form>
     </div>
 </body>

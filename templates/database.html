@@ -7,26 +7,26 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">  
-    <script src="js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <title>Database</title>
 </head>
 <body>
     <div class="head">
         <h1>Database</h1>
         <ul class="navbar">
-            <a href="index.html"><li id="uni">Home</li></a>
-            <a href="login.html"><li id="guest">Login</li></a>
-            <a href="logout.html"><li id="user">Logout</li></a>
-            <a href="database.html"><li id="user">Database</li></a>
+            <a href="/"><li id="uni">Home</li></a>
+            <a href="login"><li id="guest">Login</li></a>
+            <a href="redirect"><li id="user">Redirect</li></a>
+            <a href="database"><li id="user">Database</li></a>
         </ul>
     </div>
     
     
     <div id="db_Broad" style="display: block;">
-        <button id="Enter" class="DB_Button" style="margin-left:10%;" onclick="DB_EntrySwap(this.id);" style="display: block;">New Entry</button>
+        <button id="Enter" class="BlueBtn" style="margin-left:10%;" onclick="DB_EntrySwap(this.id);" style="display: block;">New Entry</button>
         <input id="db_Search" class="textBox" type="text" placeholder="Search">
-        <button id="SearchBtn" class="DB_Button" onclick="javascript:void(0);" style="display: inline-block">Search</button>
+        <button id="SearchBtn" class="BlueBtn" onclick="javascript:void(0);" style="display: inline-block">Search</button>
         <div id="db_Page">
             <table>
                 <div>
@@ -46,7 +46,7 @@
     </div>
     
     <div id="new_Entry" style="display: none">
-        <button id="Return" class="DB_Button" onclick="DB_EntrySwap(this.id)">Back to DB</button>
+        <button id="Return" class="BlueBtn" onclick="DB_EntrySwap(this.id)">Back to DB</button>
         <label><h2>Username:</h2></label>
         <input id="db_Username" class="textBox" type="text" placeholder="Username" required>
         <label><h2>2FA:</h2></label>
@@ -55,7 +55,7 @@
         <input id="db_Blog" class="textBox" type="text" placeholder="Blog">
         <br>
         <br>
-        <button id="Submit"class="DB_Button" onclick="DB_EntrySwap(this.id)" style="display:block;">Submit</button>
+        <button id="Submit"class="BlueBtn" onclick="DB_EntrySwap(this.id)" style="display:block;">Submit</button>
     </div>
 
 </body>

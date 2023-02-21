@@ -7,10 +7,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">  
-    <script src="js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <title>Redirecting...</title>
-    <meta http-equiv = "refresh" content = "3; url=index.html" />
+    <meta http-equiv = "refresh" content = "3; url=/" />
 </head>
 <body>
     <h1>Hang tight, we're redirecting you...</h1>
