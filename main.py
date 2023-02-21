@@ -33,7 +33,7 @@ def database():
 def redirect():
     return render_template("redirect.html")
 
-@app.route("/<usr>Home")
+@app.route("/<usr>/home")
 def user(usr):
     return render_template("userpage.html")
 
