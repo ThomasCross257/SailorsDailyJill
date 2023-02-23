@@ -46,6 +46,10 @@ def signup():
         email = request.form["signup_email"]
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
+        user_data = user_collection.find_one({"Username": user})
+        if user_data is not None:
+            return render_template("signup.html", error="User already exists")
+
         new_user = {
             "Username" : user,
             "Password" : hashed_password,
@@ -53,14 +57,11 @@ def signup():
             "Verified" : False,
             "Admin" : False
         }
-        user_data = user_collection.find_one({"Username": user})
-        if user == user_data["Username"]:
-            return render_template("signup.html", error="User already exists")
-        else:
-            user_collection.insert_one(new_user)
-            return redirect(url_for("usr_verification", usr=user))
+        user_collection.insert_one(new_user)
+        return redirect(url_for("usrVerification", usr=user))
     else:
         return render_template("signup.html")
+
 
 @app.route("/database")
 def database():
@@ -75,7 +76,7 @@ def userLogin(usr):
     return render_template("userpage.html")
 
 @app.route("/verification")
-def usr_verification(usr):
+def usrVerification(usr):
     return render_template("verification.html")
 
 if __name__ == "__main__":
