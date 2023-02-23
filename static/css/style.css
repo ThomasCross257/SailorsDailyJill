@@ -63,6 +63,14 @@ body{
     font-size: 1.3em;
 }
 
+.LoginBox a {
+    color: #F9EBE0;
+
+}
+.LoginBox a:visited{
+    color: #F9EBE0;
+}
+
 .LoginText{
     width: 50%;
     padding:10px;
