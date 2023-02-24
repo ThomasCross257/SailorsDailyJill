@@ -57,7 +57,6 @@ def signup():
             "Username" : user,
             "Password" : hashed_password,
             "Email address" : email,
-            "Verified" : False,
             "Admin" : False
         }
         user_collection.insert_one(new_user)
