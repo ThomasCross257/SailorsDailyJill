@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from pandas import DataFrame
 import bcrypt
+from db_func import is_valid_email as emailValid #Should move personal library to another directory later
 
 def get_DB(DB_NAME):
     load_dotenv()
@@ -47,6 +48,8 @@ def signup():
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
         user_data = user_collection.find_one({"Username": user})
+        if emailValid(email) == False:
+            return render_template("signup.html", error="Invailid Email")
         if user_data is not None:
             return render_template("signup.html", error="User already exists")
 
