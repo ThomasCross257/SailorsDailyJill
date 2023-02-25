@@ -13,14 +13,14 @@
     list-style: none;
     overflow: hidden;
     padding: 1%;
-    background-color: #208aae;
+    background-color: #050c18;
 }
 li{
     display: inline-block;
     margin-left: 15%;
     margin-right: 5%;
     font-size: 1.5em;
-    color: #F9EBE0  
+    color: #FF6B6B  
 }
 li:hover{
     text-shadow: #FF312E 1px 0 10px;
@@ -39,14 +39,14 @@ li a:visited{
 /* Body */
 body{
     font-family: 'Source Sans Pro', sans-serif;
-    background-color: #373737;
-    color: #F9EBE0;
+    background-color: #0A192F;
+    color: #FF6B6B;
 }
 
 .bodytext{
     margin-left: 25%;
     margin-right: 25%;
-    background-color: #272727;
+    background-color: #050c18;
     padding: 25px;
     border-radius: .7em;
     font-size: 1.3em;
@@ -57,18 +57,18 @@ body{
     margin-top: 5%;
     margin-left: 35%;
     margin-right: 35%;
-    background-color: #272727;
+    background-color: #050c18;
     padding: 25px;
     border-radius: .7em;
     font-size: 1.3em;
 }
 
 .LoginBox a {
-    color: #F9EBE0;
+    color: #FF6B6B;
 
 }
 .LoginBox a:visited{
-    color: #F9EBE0;
+    color: #FF6B6B;
 }
 
 .LoginText{
@@ -76,13 +76,12 @@ body{
     padding:10px;
     margin-bottom: 5%;
 }
-.BlueBtn{
+.Btn{
     padding: 10px;
     font-size: 1.1em;
-    background-color: #208aae;
+    background-color: #FFD700;
     border-radius: .3em;
-    color:#F9EBE0;
-    border-color: #1b7391;
+    color:#0A192F;
 }
 #signup{
     display: none;

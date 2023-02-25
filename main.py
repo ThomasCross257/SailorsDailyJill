@@ -17,6 +17,7 @@ def get_DB(DB_NAME):
 # Account collection
 accounts_db = get_DB('accounts')
 user_collection = accounts_db["users"]
+loggedIn = True
 
 app = Flask(__name__)
 
@@ -32,9 +33,10 @@ def login():
         user_data = user_collection.find_one({"Username": user})
         # DEBUG: print(bcrypt.checkpw(password.encode('utf-8'), user_data["Password"])) Should return true or false
         if user_data and bcrypt.checkpw(password.encode('utf-8'), user_data["Password"]):
+            loggedIn = True
             return redirect(url_for("userLogin", usr=user))
         else:
-            return render_template("login.html", error="Invalid username or password")
+            return render_template("login.html", error="Invalid Login Information")
     else:
         return render_template("login.html")
 
@@ -49,7 +51,7 @@ def signup():
 
         user_data = user_collection.find_one({"Username": user})
         if emailValid(email) == False:
-            return render_template("signup.html", error="Invailid Email")
+            return render_template("signup.html", error="Not a valid Email address.")
         if user_data is not None:
             return render_template("signup.html", error="User already exists")
 
@@ -69,9 +71,10 @@ def signup():
 def database():
     return render_template("database.html")
 
-@app.route("/redirect")
+@app.route("/logout")
 def logout_r():
-    return render_template("redirect.html")
+    loggedIn = False
+    return render_template("logout.html")
 
 @app.route("/<usr>/home")
 def userLogin(usr):
