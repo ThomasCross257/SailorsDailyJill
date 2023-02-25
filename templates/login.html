@@ -19,15 +19,19 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
+                    {% if usr == None %}
                     <li class="nav-item">
                         <a class="nav-link" href="login">Login</a>
                     </li>
+                    {% endif %}
+                    {% if usr != None %}
                     <li class="nav-item">
                         <a class="nav-link" href="logout">Logout</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="database">Database</a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>

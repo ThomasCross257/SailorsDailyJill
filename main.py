@@ -1,13 +1,14 @@
 import os
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, redirect, url_for, render_template, request, session
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from pandas import DataFrame
 import bcrypt
 from db_func import is_valid_email as emailValid #Should move personal library to another directory later
 
+load_dotenv()
+
 def get_DB(DB_NAME):
-    load_dotenv()
     MONGO_URI = os.getenv('MONGO_URI')
     client = MongoClient(MONGO_URI)
     return client[DB_NAME]
@@ -17,13 +18,18 @@ def get_DB(DB_NAME):
 # Account collection
 accounts_db = get_DB('accounts')
 user_collection = accounts_db["users"]
-loggedIn = True
 
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY')
+default = None
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    if "user" in session:
+        user = session["user"]
+        return redirect(url_for("userLogin", usr=user))
+    else:
+        return render_template("index.html", usr=default)
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -33,12 +39,12 @@ def login():
         user_data = user_collection.find_one({"Username": user})
         # DEBUG: print(bcrypt.checkpw(password.encode('utf-8'), user_data["Password"])) Should return true or false
         if user_data and bcrypt.checkpw(password.encode('utf-8'), user_data["Password"]):
-            loggedIn = True
+            session["user"] = user
             return redirect(url_for("userLogin", usr=user))
         else:
-            return render_template("login.html", error="Invalid Login Information")
+            return  redirect(url_for("login", usr=default, error="Invalid Login Information."))
     else:
-        return render_template("login.html")
+        return render_template("login.html", usr=default)
 
 
 @app.route("/signup", methods=["POST", "GET"])
@@ -51,9 +57,9 @@ def signup():
 
         user_data = user_collection.find_one({"Username": user})
         if emailValid(email) == False:
-            return render_template("signup.html", error="Not a valid Email address.")
+            return  redirect(url_for("signup", usr=default, error="Not a valid Email address."))
         if user_data is not None:
-            return render_template("signup.html", error="User already exists")
+            return  redirect(url_for("signup", usr=default, error="User already exists"))
 
         new_user = {
             "Username" : user,
@@ -62,27 +68,29 @@ def signup():
             "Admin" : False
         }
         user_collection.insert_one(new_user)
-        return redirect(url_for("usrVerification", usr=user))
+        return redirect(url_for("userLogin", usr=user))
     else:
-        return render_template("signup.html")
+        return render_template("signup.html", usr=default)
 
 
 @app.route("/database")
 def database():
     return render_template("database.html")
 
-@app.route("/logout")
-def logout_r():
-    loggedIn = False
-    return render_template("logout.html")
+@app.route("/<usr>/logout")
+def logout_r(usr):
+    if "user" in session:
+        session.pop("user", None)
+        return render_template("logout.html")
 
 @app.route("/<usr>/home")
 def userLogin(usr):
-    return render_template("userpage.html")
-
-@app.route("/verification")
-def usrVerification(usr):
-    return render_template("verification.html")
+    if "user" in session:
+        user = session["user"]
+        print(user)
+        return render_template("profilePage.html", username = usr)
+    else:
+        return render_template("login.html", usr=default)
 
 if __name__ == "__main__":
 
