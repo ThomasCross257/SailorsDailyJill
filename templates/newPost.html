@@ -47,18 +47,18 @@
                 </ul>
             </div>
         </nav>
-        <form>
+        <form action="#" method="post">
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" placeholder="Enter title" required>
+                <input type="text" class="form-control" name="title" placeholder="Enter title" required>
             </div>
             <div class="form-group">
                 <label for="tags">Tags</label>
-                <input type="text" class="form-control" id="tags" placeholder="Enter tags (comma separated)" required>
+                <input type="text" class="form-control" name="tags" placeholder="Enter tags (comma separated)" required>
             </div>
             <div class="form-group">
                 <label for="content">Content</label>
-                <textarea class="form-control" id="content" rows="3"></textarea>
+                <textarea class="form-control" name="content" rows="3"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

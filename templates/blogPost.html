@@ -28,7 +28,7 @@
                     </li>
                     {% if usr == None %}
                     <li class="nav-item">
-                        <a class="nav-link" href="login">Login</a>
+                        <a class="nav-link" href="/login">Login</a>
                     </li>
                     {% endif %}
                     {% if usr != None %}
@@ -47,12 +47,11 @@
                 </ul>
             </div>
         </nav>
-        <h1 class="text-white">{{ title }}</h1>
-        <h3 class="text-white">{{ author }}</h3>
-        <h3 class="text-white">{{ date }}</h3>
+        <div class="jumbotron bg-secondary text-white"><h1>{{ title }}</h1></div>
+        <h3 class="text-white">Author:{{ author }}</h3>
+        <h3 class="text-white">Date: {{ date }}</h3>
+        <h6>Tags: {{ tags }}</h6>
         <p class="text-white">{{ content }}</p>
-        
-        <h6>{{ tags }}</h6>
     </div>
 </body>
 </html>

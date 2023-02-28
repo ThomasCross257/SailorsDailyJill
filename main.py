@@ -7,6 +7,7 @@ from pandas import DataFrame
 import bcrypt
 import libs.schemas as schemas
 from datetime import date
+from bson.objectid import ObjectId
 import libs.db_func as db_func
 
 load_dotenv()
@@ -98,12 +99,8 @@ def newpost(usr):
         content = request.form["content"]
         tags = request.form["tags"]
         author = usr
+        date = todaysDate
         post_id = db_func.generate_post_id()
-        print(title)
-        print(content)
-        print(tags)
-        print(author)
-        print(post_id)
         new_post = {
         '_id' : post_id,
         "Title" : title,
@@ -112,28 +109,37 @@ def newpost(usr):
         "Date" : date,
         "Tags" : tags
         }
-        print (new_post)
-        """
         schemas.newPost(title, content, author, todaysDate, tags, post_id)
         if db_func.tagsValid(tags) == False:
             return redirect(url_for("newpost", usr=usr, error="Invalid tags."))
-        """
         post_collection.insert_one(new_post)
-        return render_template("newPost.html", post=new_post)
+        return redirect(url_for("viewpost", post_id=post_id))
     else:
-        return render_template("newPost.html", post=default)
-@app.route("/<post>")
-def viewpost(post):
+        if "user" in session:
+            return render_template("newPost.html", usr=usr)
+        else:
+            return redirect(url_for("login", usr=default))
+
+@app.route("/post/<post_id>")
+def viewpost(post_id):
+    usr=session["user"]
+    id = ObjectId(post_id)
+    print(id)
     try:
-        post = post_collection.find_one({"_id": post})
-        content = post["Content"]
-        title = post["Title"]
-        author = post["Author"]
-        date = post["Date"]
-        tags = post["Tags"]
+        current_post = post_collection.find_one({"_id": id})
+        print(current_post["Content"])
+        content = current_post["Content"]
+        title = current_post["Title"]
+        author = current_post["Author"]
+        date = current_post["Date"]
+        tags = current_post["Tags"]
     except OperationFailure:
         return render_template("404.html")
-    return render_template("blogPost.html", content, title, author, date, tags)
+    return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, usr=usr)
+@app.route("/post/logout")
+def post_logout():
+    return redirect(url_for("logout_r", usr=session["user"]))
+
 
 if __name__ == "__main__":
 
