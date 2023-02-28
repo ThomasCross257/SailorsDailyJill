@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
 
     <title>New Post</title>
 </head>
@@ -48,7 +49,7 @@
             </div>
         </nav>
         <div class="jumbotron bg-secondary text-white"><h1>{{ title }}</h1></div>
-        <h3 class="text-white">Author:{{ author }}</h3>
+        <h3 class="text-white userLink">Author: <a href="#">{{ author }}</a></h3>
         <h3 class="text-white">Date: {{ date }}</h3>
         <h6>Tags: {{ tags }}</h6>
         <p class="text-white">{{ content }}</p>

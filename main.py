@@ -1,6 +1,6 @@
 import os
 from flask import Flask, redirect, url_for, render_template, request, session
-from pymongo import MongoClient
+from pymongo import MongoClient, ASCENDING, DESCENDING
 from pymongo.errors import OperationFailure
 from dotenv import load_dotenv
 from pandas import DataFrame
@@ -60,6 +60,7 @@ def signup():
         user = request.form["signup_user"]
         password = request.form["signup_password"]
         email = request.form["signup_email"]
+        bio = "This user hasn't updated their bio yet."
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
         user_data = user_collection.find_one({"Username": user})
@@ -67,7 +68,7 @@ def signup():
             return  redirect(url_for("signup", usr=default, error="Not a valid Email address."))
         if user_data is not None:
             return  redirect(url_for("signup", usr=default, error="User already exists"))
-        new_user = schemas.newUser(user, hashed_password, email, False)
+        new_user = schemas.newUser(user, hashed_password, email, False, bio)
         user_collection.insert_one(new_user)
         return redirect(url_for("userLogin", usr=user))
     else:
@@ -89,7 +90,12 @@ def userLogin(usr):
     if "user" in session:
         user = session["user"]
         print(user)
-        return render_template("profilePage.html", username = usr)
+        userPosts = post_collection.find({"Author": user}).sort("date", DESCENDING).limit(5)
+        postList = []
+        for post in userPosts:
+            if post["Author"] == user:
+                postList.append(post)
+        return render_template("profilePage.html", username=usr, posts=postList, postLen=len(postList))
     else:
         return render_template("login.html", usr=default)
 @app.route("/<usr>/create-post", methods=["POST", "GET"])
@@ -125,7 +131,6 @@ def viewpost(post_id):
     usr=session["user"]
     try:
         current_post = post_collection.find_one({"_id": post_id})
-        print(current_post["Content"])
         content = current_post["Content"]
         title = current_post["Title"]
         author = current_post["Author"]
@@ -138,6 +143,12 @@ def viewpost(post_id):
 def post_logout():
     return redirect(url_for("logout_r", usr=session["user"]))
 
+@app.route("/<usr>/post/<post_id>")
+def post_usrpage(usr, post_id):
+    return redirect(url_for("viewpost", post_id=post_id))
+@app.route("/post/<post_id>/<usr>")
+def post_author(post_id, usr):
+    return redirect(url_for("userLogin", usr=usr))
 
 if __name__ == "__main__":
 

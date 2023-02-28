@@ -12,8 +12,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
 
-    <title>Profile</title>
+    <title>{{ username }}'s Profile</title>
 </head>
 <body class="bg-dark">
     <div class="container">
@@ -62,11 +63,9 @@
                     <div class="card-body bg-secondary">
                         <h5 class="card-title bg-secondary text-white">Recent Posts</h5>
                         <ul class="list-group list-group-flush bg-secondary">
-                            <li class="list-group-item bg-secondary"><a href="#" class="link-light">Post 1</a></li>
-                            <li class="list-group-item bg-secondary"><a href="#" class="link-light">Post 2</a></li>
-                            <li class="list-group-item bg-secondary"><a href="#" class="link-light">Post 3</a></li>
-                            <li class="list-group-item bg-secondary"><a href="#" class="link-light">Post 4</a></li>
-                            <li class="list-group-item bg-secondary"><a href="#" class="link-light">Post 5</a></li>
+                            {%for post in posts%}
+                            <li class="list-group-item bg-secondary"><a href="post/{{post._id}}" class="link-light">{{ post.Title }}</a></li>
+                            {%endfor%}
                         </ul>
                     </div>
                 </div>

@@ -7,7 +7,8 @@ Complete:
         Theming: Start on making a dark theme and changing the shape/color of different buttons.
         Making blog posts: Store in database and use username to link them to the user.
 In Progress:
-    Profiles: Displaying User's posts for easier viewing.
+    Profiles: Displaying User's posts for easier viewing, Editintg profiles and adding personal descriptions
+    Archives: User Post Archives that are broken down by date. Should be perfect to test today.
     Bootstrap JS: Needed for mobile devices
     Additional JavaScript theming: Smoother transitions and a better look.
     Actual Homepage: Getting rid of lipsum text.

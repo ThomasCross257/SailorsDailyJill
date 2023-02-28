@@ -1,9 +1,10 @@
-def newUser(user, password, email, adminPermission):
+def newUser(user, password, email, adminPermission, biography):
     new_user ={
         "Username" : user,
         "Password" : password,
         "Email address" : email,
-        "Admin" : adminPermission
+        "Admin" : adminPermission,
+        "Biography" : biography
     }
     return new_user
 def newPost(title, content, author, date, tags, post_id):
@@ -16,3 +17,19 @@ def newPost(title, content, author, date, tags, post_id):
         "Tags" : tags
     }
     return new_post
+def newComment(comment, author, date, post_id):
+    new_comment = {
+        '_id' : post_id,
+        "Comment" : comment,
+        "Author" : author,
+        "Date" : date
+    }
+    return new_comment
+def newReply(reply, author, date, comment_id):
+    new_reply = {
+        '_id' : comment_id,
+        "Reply" : reply,
+        "Author" : author,
+        "Date" : date
+    }
+    return new_reply
