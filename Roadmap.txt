@@ -1,0 +1,21 @@
+Complete:
+    Basic website structure
+        Homepage
+        Sessions
+        Login and Logout functionality.
+        Personal homepage.
+In Progress:
+    Theming: Start on making a dark theme and changing the shape/color of different buttons.
+    Bootstrap JS: Needed for mobile devices
+    Additional JavaScript theming: Smoother transitions and a better look.
+    Actual Homepage: Getting rid of lipsum text.
+    Making blog posts: Store in database and use username to link them to the user.
+Not started:
+    Randomized session key generator: Remove reliance on .env files
+    Profile images: Need server/service where I can host them.
+    Docker Migration: Begin research while you are ahead.
+    Kubernetes Integration: Likely begin in early-mid march.
+Post Website completion:
+    Kubernetes testing
+    Integration of API.
+    Custom Themes?

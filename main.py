@@ -1,10 +1,13 @@
 import os
 from flask import Flask, redirect, url_for, render_template, request, session
 from pymongo import MongoClient
+from pymongo.errors import OperationFailure
 from dotenv import load_dotenv
 from pandas import DataFrame
 import bcrypt
-from db_func import is_valid_email as emailValid #Should move personal library to another directory later
+import libs.schemas as schemas
+from datetime import date
+import libs.db_func as db_func
 
 load_dotenv()
 
@@ -18,6 +21,9 @@ def get_DB(DB_NAME):
 # Account collection
 accounts_db = get_DB('accounts')
 user_collection = accounts_db["users"]
+post_collection = accounts_db["posts"]
+
+todaysDate = date.today().strftime("%m/%d/%y")
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
@@ -56,17 +62,11 @@ def signup():
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
         user_data = user_collection.find_one({"Username": user})
-        if emailValid(email) == False:
+        if db_func.emailValid(email) == False:
             return  redirect(url_for("signup", usr=default, error="Not a valid Email address."))
         if user_data is not None:
             return  redirect(url_for("signup", usr=default, error="User already exists"))
-
-        new_user = {
-            "Username" : user,
-            "Password" : hashed_password,
-            "Email address" : email,
-            "Admin" : False
-        }
+        new_user = schemas.newUser(user, hashed_password, email, False)
         user_collection.insert_one(new_user)
         return redirect(url_for("userLogin", usr=user))
     else:
@@ -91,6 +91,49 @@ def userLogin(usr):
         return render_template("profilePage.html", username = usr)
     else:
         return render_template("login.html", usr=default)
+@app.route("/<usr>/create-post", methods=["POST", "GET"])
+def newpost(usr):
+    if request.method == "POST":
+        title = request.form["title"]
+        content = request.form["content"]
+        tags = request.form["tags"]
+        author = usr
+        post_id = db_func.generate_post_id()
+        print(title)
+        print(content)
+        print(tags)
+        print(author)
+        print(post_id)
+        new_post = {
+        '_id' : post_id,
+        "Title" : title,
+        "Content" : content,
+        "Author" : author,
+        "Date" : date,
+        "Tags" : tags
+        }
+        print (new_post)
+        """
+        schemas.newPost(title, content, author, todaysDate, tags, post_id)
+        if db_func.tagsValid(tags) == False:
+            return redirect(url_for("newpost", usr=usr, error="Invalid tags."))
+        """
+        post_collection.insert_one(new_post)
+        return render_template("newPost.html", post=new_post)
+    else:
+        return render_template("newPost.html", post=default)
+@app.route("/<post>")
+def viewpost(post):
+    try:
+        post = post_collection.find_one({"_id": post})
+        content = post["Content"]
+        title = post["Title"]
+        author = post["Author"]
+        date = post["Date"]
+        tags = post["Tags"]
+    except OperationFailure:
+        return render_template("404.html")
+    return render_template("blogPost.html", content, title, author, date, tags)
 
 if __name__ == "__main__":
 

@@ -1,5 +1,6 @@
 import re
 import dns.resolver
+from bson import ObjectId
 
 def is_valid_email(email):
     # Check if the email address is valid according to the email format
@@ -20,3 +21,15 @@ def is_valid_email(email):
         return False
 
     return True
+def tagsValid(tags):
+    if not re.match(r"^[a-zA-Z0-9, ]+$", tags):
+        return False
+    return True
+
+def tag_search(tagstring):
+    tags = tagstring.split(',')
+    return [tag.strip() for tag in tags]
+
+def generate_post_id():
+    post_id = ObjectId()
+    return str(post_id)
