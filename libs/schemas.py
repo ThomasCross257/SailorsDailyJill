@@ -8,7 +8,7 @@ def newUser(user, password, email, adminPermission):
     return new_user
 def newPost(title, content, author, date, tags, post_id):
     new_post = {
-        'id' : post_id,
+        '_id' : post_id,
         "Title" : title,
         "Content" : content,
         "Author" : author,

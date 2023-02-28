@@ -123,10 +123,8 @@ def newpost(usr):
 @app.route("/post/<post_id>")
 def viewpost(post_id):
     usr=session["user"]
-    id = ObjectId(post_id)
-    print(id)
     try:
-        current_post = post_collection.find_one({"_id": id})
+        current_post = post_collection.find_one({"_id": post_id})
         print(current_post["Content"])
         content = current_post["Content"]
         title = current_post["Title"]
