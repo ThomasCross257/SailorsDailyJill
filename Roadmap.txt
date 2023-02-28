@@ -6,16 +6,19 @@ Complete:
         Personal homepage.
         Theming: Start on making a dark theme and changing the shape/color of different buttons.
         Making blog posts: Store in database and use username to link them to the user.
+        Randomized session key generator: Remove reliance on .env files
 In Progress:
-    Profiles: Displaying User's posts for easier viewing, Editintg profiles and adding personal descriptions
+    Profiles: Displaying User's posts for easier viewing, Editing profiles and adding personal descriptions
     Archives: User Post Archives that are broken down by date. Should be perfect to test today.
+    Search Functions:A simple search page that queries the database.
     Bootstrap JS: Needed for mobile devices
     Additional JavaScript theming: Smoother transitions and a better look.
     Actual Homepage: Getting rid of lipsum text.
 Not started:
-    Randomized session key generator: Remove reliance on .env files
-    Profile images: Need server/service where I can host them.
+    Profile images(?): Need server/service where I can host them.
+    File reorganization and refactoring: Organization for readability.
     Docker Migration: Begin research while you are ahead.
+    Jinja Templating: Because my websites look like an inconsistent hot mess.
     Kubernetes Integration: Likely begin in early-mid march.
 Post Website completion:
     Kubernetes testing

@@ -21,20 +21,21 @@ def get_DB(DB_NAME):
 
 # Account collection
 accounts_db = get_DB('accounts')
+admin_db = get_DB('admin')
 user_collection = accounts_db["users"]
 post_collection = accounts_db["posts"]
+secret_collection = admin_db["secrets"]
 
 todaysDate = date.today().strftime("%m/%d/%y")
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY')
 default = None
-
+app.secret_key = db_func.secretCreate()
 @app.route("/")
 def home():
     if "user" in session:
         user = session["user"]
-        return redirect(url_for("userLogin", usr=user))
+        return redirect(url_for("userHome", usr=user))
     else:
         return render_template("index.html", usr=default)
 
@@ -44,15 +45,13 @@ def login():
         user = request.form["signin_username"]
         password = request.form["signin_password"]
         user_data = user_collection.find_one({"Username": user})
-        # DEBUG: print(bcrypt.checkpw(password.encode('utf-8'), user_data["Password"])) Should return true or false
         if user_data and bcrypt.checkpw(password.encode('utf-8'), user_data["Password"]):
             session["user"] = user
-            return redirect(url_for("userLogin", usr=user))
+            return redirect(url_for("userHome", usr=user))
         else:
             return  redirect(url_for("login", usr=default, error="Invalid Login Information."))
     else:
         return render_template("login.html", usr=default)
-
 
 @app.route("/signup", methods=["POST", "GET"])
 def signup():
@@ -62,22 +61,27 @@ def signup():
         email = request.form["signup_email"]
         bio = "This user hasn't updated their bio yet."
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-
         user_data = user_collection.find_one({"Username": user})
-        if db_func.emailValid(email) == False:
+        if db_func.is_valid_email(email) == False:
             return  redirect(url_for("signup", usr=default, error="Not a valid Email address."))
         if user_data is not None:
             return  redirect(url_for("signup", usr=default, error="User already exists"))
-        new_user = schemas.newUser(user, hashed_password, email, False, bio)
+        is_admin = False
+        if user == "admin":
+            is_admin = True
+        new_user = schemas.newUser(user, hashed_password, email, is_admin, bio)
         user_collection.insert_one(new_user)
-        return redirect(url_for("userLogin", usr=user))
+        return redirect(url_for("home", usr=user))
     else:
         return render_template("signup.html", usr=default)
 
 
-@app.route("/database")
-def database():
-    return render_template("database.html")
+@app.route("/<usr>/database")
+def database(usr):
+    if usr != "admin":
+        return redirect(url_for("home", usr=default))
+    else:
+        return render_template("database.html")
 
 @app.route("/<usr>/logout")
 def logout_r(usr):
@@ -86,18 +90,20 @@ def logout_r(usr):
         return render_template("logout.html")
 
 @app.route("/<usr>/home")
-def userLogin(usr):
+def userHome(usr):
     if "user" in session:
         user = session["user"]
         print(user)
+        userPage = user_collection.find_one({"Username": user})
         userPosts = post_collection.find({"Author": user}).sort("date", DESCENDING).limit(5)
         postList = []
         for post in userPosts:
             if post["Author"] == user:
                 postList.append(post)
-        return render_template("profilePage.html", username=usr, posts=postList, postLen=len(postList))
+        return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList))
     else:
-        return render_template("login.html", usr=default)
+        session.pop("user", None)
+        return redirect(url_for("login", usr=default))
 @app.route("/<usr>/create-post", methods=["POST", "GET"])
 def newpost(usr):
     if request.method == "POST":
@@ -148,7 +154,7 @@ def post_usrpage(usr, post_id):
     return redirect(url_for("viewpost", post_id=post_id))
 @app.route("/post/<post_id>/<usr>")
 def post_author(post_id, usr):
-    return redirect(url_for("userLogin", usr=usr))
+    return redirect(url_for("userHome", usr=usr))
 
 if __name__ == "__main__":
 

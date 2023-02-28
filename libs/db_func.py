@@ -1,6 +1,7 @@
 import re
 import dns.resolver
 from bson import ObjectId
+import secrets
 
 def is_valid_email(email):
     # Check if the email address is valid according to the email format
@@ -33,3 +34,7 @@ def tag_search(tagstring):
 def generate_post_id():
     post_id = ObjectId()
     return str(post_id)
+
+def secretCreate():
+    session_secret = secrets.token_hex(16)
+    return session_secret
