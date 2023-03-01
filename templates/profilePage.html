@@ -20,7 +20,12 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
+                {% if currentUsr != None %}
                 <h3 class="navbar-brand">Welcome {{ userPage.Username }}</h3>
+                {% endif %}
+                {% if currentUsr == None %}
+                <h3 class="navbar-brand">Welcome Guest</h3>
+                {% endif %}
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -29,12 +34,12 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/">Home</a>
                         </li>
-                        {% if usr == None %}
+                        {% if currentUsr == None %}
                         <li class="nav-item">
                             <a class="nav-link" href="login">Login</a>
                         </li>
                         {% endif %}
-                        {% if usr != None %}
+                        {% if currentUsr != None %}
                         <li class="nav-item">
                             <a class="nav-link" href="logout">Logout</a>
                         </li>

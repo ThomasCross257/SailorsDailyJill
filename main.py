@@ -89,21 +89,19 @@ def logout_r(usr):
         session.pop("user", None)
         return render_template("logout.html")
 
-@app.route("/<usr>/home")
+@app.route("/profile/<usr>")
 def userHome(usr):
-    if "user" in session:
-        user = session["user"]
-        print(user)
-        userPage = user_collection.find_one({"Username": user})
-        userPosts = post_collection.find({"Author": user}).sort("date", DESCENDING).limit(5)
-        postList = []
-        for post in userPosts:
-            if post["Author"] == user:
-                postList.append(post)
-        return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList))
+    userPage = user_collection.find_one({"Username": usr})
+    userPosts = post_collection.find({"Author": usr}).sort("date", DESCENDING).limit(5)
+    postList = []
+    for post in userPosts:
+        if post["Author"] == usr:
+            postList.append(post)
+    if usr in session:
+        user = session[usr]
+        return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList), currentUsr=user)
     else:
-        session.pop("user", None)
-        return redirect(url_for("login", usr=default))
+        return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList), currentUsr=default)
 @app.route("/<usr>/create-post", methods=["POST", "GET"])
 def newpost(usr):
     if request.method == "POST":
@@ -132,9 +130,8 @@ def newpost(usr):
         else:
             return redirect(url_for("login", usr=default))
 
-@app.route("/post/<post_id>")
-def viewpost(post_id):
-    usr=session["user"]
+@app.route("/post/<post_id>/=<usr>")
+def viewpost(post_id, usr):
     try:
         current_post = post_collection.find_one({"_id": post_id})
         content = current_post["Content"]
@@ -144,14 +141,17 @@ def viewpost(post_id):
         tags = current_post["Tags"]
     except OperationFailure:
         return render_template("404.html")
-    return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, usr=usr)
+    if usr in session:
+        return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, usr=usr)
+    else:
+        return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, usr=default)
 @app.route("/post/logout")
 def post_logout():
     return redirect(url_for("logout_r", usr=session["user"]))
 
 @app.route("/<usr>/post/<post_id>")
 def post_usrpage(usr, post_id):
-    return redirect(url_for("viewpost", post_id=post_id))
+    return redirect(url_for("viewpost", post_id=post_id, usr=usr))
 @app.route("/post/<post_id>/<usr>")
 def post_author(post_id, usr):
     return redirect(url_for("userHome", usr=usr))
