@@ -72,3 +72,9 @@ def profileUpdate(newUsername, newEmail, newPassword, verifyPassword, usr, newBi
             collection.update_one({"Username": usr}, {"$set": {"Email address": newEmail}})
             collection.update_one({"Username": usr}, {"$set": {"Username": newUsername}})
             return "Success!"
+
+def usernameExists(username, collection):
+    if collection.find_one({"Username": username}) is not None:
+        return True
+    else:
+        return False

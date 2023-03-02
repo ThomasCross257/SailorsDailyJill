@@ -8,6 +8,7 @@ import bcrypt
 import libs.schemas as schemas
 from datetime import date
 import libs.db_func as db_func
+from bson.objectid import ObjectId
 
 load_dotenv()
 
@@ -134,19 +135,34 @@ def newpost(usr):
 
 @app.route("/<usr>/edit-profile", methods=["POST", "GET"])
 def editProfile(usr):
+    user = user_collection.find_one({'_id': ObjectId(usr.get_id())})
     if request.method == "POST":
         newBio = request.form["bio"]
         newUsername = request.form["username"]
         newPassword = request.form["password"]
         passwordVerify = request.form["confirmPassword"]
         newEmail = request.form["email"]
-        print(newUsername)
-        UpdateResult = db_func.profileUpdate(newUsername, newEmail, newPassword, passwordVerify, usr, newBio, user_collection)
-        if UpdateResult != "Success!":
-            return redirect(url_for("editProfile", usr=usr, error=UpdateResult))
-        else:
-            session["user"] = newUsername
-            return redirect(url_for("userHome", usr=usr))
+        if newUsername:
+            if db_func.usernameExists(newUsername, user_collection) == True:
+                return redirect(url_for("editProfile", usr=usr, error="Username already exists."))
+            else:
+                user_collection.update_one({'_id': ObjectId(usr.get_id())}, {'$set': {'Username': newUsername}})
+
+        if newBio:
+            user_collection.update_one({'_id': ObjectId(usr.get_id())}, {'$set': {'Biography': newBio}})
+
+        if newPassword and passwordVerify:
+            if newUsername == newPassword:
+                hashed_password = bcrypt.hashpw(newPassword.encode('utf-8'), bcrypt.gensalt())
+                user_collection.update_one({'_id': ObjectId(usr.get_id())}, {'$set': {'Password': hashed_password}})
+            else:
+                return redirect (url_for("editProfile", usr=usr, error="Passwords do not match."))
+        if newEmail:
+            if db_func.is_valid_email(newEmail) == False:
+                return redirect(url_for("editProfile", usr=usr, error="Not a valid Email address."));
+            else:
+                user_collection.update_one({'_id': ObjectId(usr.get_id())}, {'$set': {'Email address': newEmail}})
+        
     else:
         if "user" in session:
             return render_template("editProfile.html", usr=usr)
