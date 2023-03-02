@@ -96,11 +96,14 @@ def userHome(usr):
     for post in userPosts:
         if post["Author"] == usr:
             postList.append(post)
-    if usr in session:
-        user = session[usr]
-        return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList), currentUsr=user)
+    if "user" in session:
+        return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList), currentUsr=session["user"])
     else:
         return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList), currentUsr=default)
+@app.route("/<usr>/profile/logout")
+def profilelogout(usr):
+    return redirect(url_for("logout_r", usr=usr))
+    
 @app.route("/<usr>/create-post", methods=["POST", "GET"])
 def newpost(usr):
     if request.method == "POST":
@@ -128,6 +131,31 @@ def newpost(usr):
             return render_template("newPost.html", usr=usr)
         else:
             return redirect(url_for("login", usr=default))
+
+@app.route("/<usr>/edit-profile", methods=["POST", "GET"])
+def editProfile(usr):
+    if request.method == "POST":
+        newBio = request.form["bio"]
+        newUsername = request.form["username"]
+        newPassword = request.form["password"]
+        passwordVerify = request.form["confirmPassword"]
+        newEmail = request.form["email"]
+        print(newUsername)
+        UpdateResult = db_func.profileUpdate(newUsername, newEmail, newPassword, passwordVerify, usr, newBio, user_collection)
+        if UpdateResult != "Success!":
+            return redirect(url_for("editProfile", usr=usr, error=UpdateResult))
+        else:
+            session["user"] = newUsername
+            return redirect(url_for("userHome", usr=usr))
+    else:
+        if "user" in session:
+            return render_template("editProfile.html", usr=usr)
+        else:
+            return redirect(url_for("login", usr=default))
+@app.route("/edit-profile")
+def editRedirect():
+    usr=session["user"]
+    return redirect(url_for("editProfile", usr=usr))
 
 @app.route("/post/<post_id>/=<usr>")
 def viewpost(post_id, usr):
