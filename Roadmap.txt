@@ -11,15 +11,17 @@ Complete:
         Profiles: Displaying User's posts for easier viewing, Editing profiles and adding personal descriptions
 In Progress:
     Archives: User Post Archives that are broken down by date. Should be perfect to test today.
-    Search Functions:A simple search page that queries the database.
-    Actual Homepage: Getting rid of lipsum text.
+    Search Functions:A simple search page that queries the database. (Likely to rework tags.)
+    Actual Homepage: Getting rid of lipsum text. (Include logo, additional information and a header.)
+    QOL Changes: Delete posts, delete accounts, and other small changes.
+    Database: Administrative user interface for database.
 Not started:
-    Profile images(?): Need server/service where I can host them.
     File reorganization and refactoring: Organization for readability.
     Docker Migration: Begin research while you are ahead.
+    Profile images(?): Need server/service where I can host them. (Might be done in docker)
     Jinja Templating: Because my websites look like an inconsistent hot mess.
-    Kubernetes Integration: Likely begin in early-mid march.
+    Kubernetes Integration: Likely begin in late march.
 Post Website completion:
     Kubernetes testing
-    Integration of API.
+    Email notifications
     Custom Themes?
