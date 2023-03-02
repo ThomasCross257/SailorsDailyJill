@@ -13,47 +13,41 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 
     <title>{{ userPage.Username }}'s Profile</title>
 </head>
 <body class="bg-dark">
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                {% if currentUsr != None %}
-                <h3 class="navbar-brand">Welcome {{ userPage.Username }}</h3>
-                {% endif %}
-                {% if currentUsr == None %}
-                <h3 class="navbar-brand">Welcome Guest</h3>
-                {% endif %}
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/">Home</a>
-                        </li>
-                        {% if currentUsr == None %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="login">Login</a>
-                        </li>
-                        {% endif %}
-                        {% if currentUsr != None %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="logout">Logout</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="create-post">New Post</a>
-                        </li>
-                        {% endif %}
-                        {% if userPage.Username == "admin" %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="database">Database</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="navbar-brand nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    {% if usr == None %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="login">Login</a>
+                    </li>
+                    {% endif %}
+                    {% if usr != None %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="database">Database</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search">Search</a>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
         </nav>
         <div class="row mt-5">

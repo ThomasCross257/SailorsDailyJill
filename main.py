@@ -7,7 +7,6 @@ from pandas import DataFrame
 import bcrypt
 import libs.schemas as schemas
 from datetime import date
-from bson.objectid import ObjectId
 import libs.db_func as db_func
 
 load_dotenv()
@@ -155,6 +154,14 @@ def post_usrpage(usr, post_id):
 @app.route("/post/<post_id>/<usr>")
 def post_author(post_id, usr):
     return redirect(url_for("userHome", usr=usr))
+
+@app.route("/<usr>/search", methods=["POST", "GET"])
+def search(usr):
+    return render_template("search.html", usr=usr)
+@app.route("/profile/<usr>/search")
+def search_profile(usr):
+    return redirect(url_for("search", usr=usr))
+
 
 if __name__ == "__main__":
 
