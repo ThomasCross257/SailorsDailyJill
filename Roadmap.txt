@@ -14,7 +14,7 @@ In Progress:
     Search Functions:A simple search page that queries the database. (Likely to rework tags.)
     Actual Homepage: Getting rid of lipsum text. (Include logo, additional information and a header.)
     QOL Changes: Delete posts, delete accounts, and other small changes.
-    Database: Administrative user interface for database.
+    Admin Dashboard: Administrative user interface for database and admin features.
 Not started:
     File reorganization and refactoring: Organization for readability.
     Docker Migration: Begin research while you are ahead.

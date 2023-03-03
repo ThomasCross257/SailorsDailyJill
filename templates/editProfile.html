@@ -51,33 +51,21 @@
             </div>
         </nav>
         <div class="row">
-            <div class="col-12">
-                <h1 class="text-center text-light">Edit Profile</h1>
-                <div class="col-2">
-                    <form method = "post">
-                        <input type="checkbox" class="form-check-input" name="checkUpdate" value="Name">
-                        <br>
-                        <input type="checkbox" class="form-check-input" name="checkUpdate" value="Email">
-                        <br>
-                        <input type="checkbox" class="form-check-input" name="checkUpdate" value="Password">
-                    </form>
-                </div>
-            </div>
             <div class="container">
             <form method = "post">
                 <label for = "username" class="text-light">Username</label>
-                <input type="text" class="form-control" id="username" name="username" value="&nbsp;">
+                <input type="text" class="form-control" id="username" name="username">
                 <label for = "email" class="text-light">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="&nbsp;">
+                <input type="email" class="form-control" id="email" name="email">
                 <label for = "bio" class="text-light">Bio</label>
-                <textarea class="form-control" id="bio" name="bio" rows="3" value="&nbsp;"></textarea>
+                <textarea class="form-control" id="bio" name="bio" rows="3"></textarea>
                 <label for = "password" class="text-light">Password</label>
-                <input type="password" class="form-control" name="password" value="&nbsp;">
+                <input type="password" class="form-control" name="password">
                 <label for = "confirmPassword" class="text-light">Confirm Password</label>
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" value ="&nbsp;">
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
                 <br>
                 <button type="submit" class="btn btn-primary">Submit</button>
-                <button type = "reset" class="btn btn-danger">Delete Account</button>
+                <button type = "none" class="btn btn-danger">Delete Account</button>
             </form>
         </div>
     </div>

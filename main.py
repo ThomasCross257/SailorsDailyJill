@@ -135,7 +135,7 @@ def newpost(usr):
 
 @app.route("/<usr>/edit-profile", methods=["POST", "GET"])
 def editProfile(usr):
-    user = user_collection.find_one({'_id': ObjectId(usr.get_id())})
+    user = user_collection.find_one({'Username': usr})
     if request.method == "POST":
         newBio = request.form["bio"]
         newUsername = request.form["username"]
@@ -145,23 +145,26 @@ def editProfile(usr):
         if newUsername:
             if db_func.usernameExists(newUsername, user_collection) == True:
                 return redirect(url_for("editProfile", usr=usr, error="Username already exists."))
+            elif newUsername == usr:
+                return redirect(url_for("editProfile", usr=usr, error="Username is the same as the current one."))
             else:
-                user_collection.update_one({'_id': ObjectId(usr.get_id())}, {'$set': {'Username': newUsername}})
+                user_collection.update_one({'_id': ObjectId(user["_id"])}, {'$set': {'Username': newUsername}})
 
         if newBio:
-            user_collection.update_one({'_id': ObjectId(usr.get_id())}, {'$set': {'Biography': newBio}})
+            user_collection.update_one({'_id': ObjectId(user["_id"])}, {'$set': {'Biography': newBio}})
 
         if newPassword and passwordVerify:
             if newUsername == newPassword:
                 hashed_password = bcrypt.hashpw(newPassword.encode('utf-8'), bcrypt.gensalt())
-                user_collection.update_one({'_id': ObjectId(usr.get_id())}, {'$set': {'Password': hashed_password}})
+                user_collection.update_one({'_id': ObjectId(user.get_id())}, {'$set': {'Password': hashed_password}})
             else:
                 return redirect (url_for("editProfile", usr=usr, error="Passwords do not match."))
         if newEmail:
             if db_func.is_valid_email(newEmail) == False:
                 return redirect(url_for("editProfile", usr=usr, error="Not a valid Email address."));
             else:
-                user_collection.update_one({'_id': ObjectId(usr.get_id())}, {'$set': {'Email address': newEmail}})
+                user_collection.update_one({'_id': ObjectId(user["_id"])}, {'$set': {'Email address': newEmail}})
+        return redirect(url_for("userHome", usr=usr))
         
     else:
         if "user" in session:
