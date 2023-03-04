@@ -3,7 +3,7 @@
 <div>
     <h1 align='center'>
         <br>
-        <img src ="logo/ApplicationLogo.png" alt=Bottle with a Compass inside>
+        <img src ="static/img/ApplicationLogo.png" alt=Bottle with a Compass inside>
         <br>
         Sailor's Daily Jill
         <h2 align='center'>Providing the navigation for daily needs.</h2>
