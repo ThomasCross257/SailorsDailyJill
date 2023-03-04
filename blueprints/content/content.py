@@ -94,9 +94,9 @@ def editProfile(usr):
         
     else:
         if db_func.signedInUser(usr, session) == True:
-            return render_template("editProfile.html", usr=usr)
+            return render_template("editProfile.html", usr=usr, currentUsr=session["user"])
         else:
-            return redirect(url_for("login", usr=default))
+            return redirect(url_for("login", usr=default, currentUsr=default))
 @content_bp.route("/edit-profile")
 def editRedirect():
     usr=session["user"]

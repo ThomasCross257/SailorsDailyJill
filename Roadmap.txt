@@ -13,13 +13,13 @@ Complete:
         File reorganization and refactoring: Organization for readability.
         Admin Dashboard: Administrative user interface for database and admin features.
         QOL Changes: Delete posts, delete accounts, and other small changes.
+        Actual Homepage: Getting rid of lipsum text. (Include logo, additional information and a header.)
+        Jinja Templating: Because my websites look like an inconsistent hot mess.
 In Progress:
-    Actual Homepage: Getting rid of lipsum text. (Include logo, additional information and a header.)
     Search Functions:A simple search page that queries the database. (Likely to remove tags and instead just search by title, author or content.)
 Not started:
     Docker Migration: Begin research while you are ahead.
     Profile images(?): Need server/service where I can host them. (Might be done in docker)
-    Jinja Templating: Because my websites look like an inconsistent hot mess.
     Kubernetes Integration: Likely begin in late march.
 Post Website completion:
     Kubernetes testing

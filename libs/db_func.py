@@ -7,7 +7,7 @@ from flask import redirect, session, url_for
 import bcrypt
 import libs.db_func as db_func
 import libs.schemas as schemas
-from libs.globals import user_collection
+from libs.globals import user_collection, post_collection
 
 def is_valid_email(email):
     # Check if the email address is valid according to the email format
@@ -158,4 +158,3 @@ def update_user(usrEdit, username, email, password, passwordConf, admin):
         return redirect(url_for("admin.database", usr=session["user"]))
     else:
         return redirect(url_for("admin.editEntry", usr=session["user"], usrEdit=usrEdit, error="Passwords do not match"))
-
