@@ -12,17 +12,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    <!-- Custom Imports -->
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <script src ="{{ url_for('static', filename='css/dark.css') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-    <title>Database</title>
+    <title>WARNING</title>
 </head>
 <body class="bg-dark">
     <div class="container-fluid">
         <div class="row justify-content-between">
             <div class="col-md-6 col-lg-6 col-xl-6">
-                <h1 class="text-white">Database</h1>
+                <h1 class="text-white">WARNING!</h1>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-6">
                 <ul class="nav justify-content-end">
@@ -48,46 +47,14 @@
                 </ul>
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="col-md-4 col-lg-4 col-xl-4">
-                <a href="newEntry/{{ usr }}"><button type="submit" class="btn btn-primary">New Entry</button></a>           
-            </div>
-            <div class="col-md-4 col-lg-4 col-xl-4">
-                <div class="input-group">
-                    <input id="db_Search" class="form-control" type="text" placeholder="Search">
-                    <div class="input-group-append">
-                        <button id="SearchBtn" class="btn btn-secondary">Search</button>
-                    </div>
-                </div>
-            </div>
+        <div class="container">
+            <h1 class="text-white"> Are you sure you want to delete {{ usrDelete }}?</h1>
+            <form method="post">
+                <input type="submit" name="delete" value="Yes" class="btn btn-danger">
+                <input type="submit" name="cancel" value="No" class="btn btn-success">
+            </form>
         </div>
-        <div id="db_Page" class="mt-4">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th class="text-white">Username</th>
-                        <th class="text-white">Admin</th>
-                        <th class="text-white">ID</th>
-                        <th class="text-white">Blog</th>
-                        <th class="text-white">Edit</th>
-                        <th class="text-white">Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in userList %}
-                    <tr>
-                        <td class="text-white">{{ user.Username }}</td>
-                        <td class="text-white">{{ user.Admin }}</td>
-                        <td class="text-white">{{ user._id }}</td>
-                        <td class="text-white"><a class="userLink" href="{{url_for('content.userHome', currentUsr=session['user'], usr=user.Username)}}">{{ user.Username }}'s Blog</td>
-                        <td><a href="editEntry/{{ usr }}/{{ user.Username }}"><button class="btn btn-info">Edit</button></a></td>
-                        <form method="Post" action="{{url_for('admin.deleteEntry', usr=session['user'], usrDelete=user.Username)}}">
-                        <td><button class="btn btn-danger">Delete</button></td>
-                        </form>
-                    </tr>
-                    {%endfor%}
-                </tbody>
-            </table>
-        </div>
+        </form>
+    </div>
 </body>
 </html>

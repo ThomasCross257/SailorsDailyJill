@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, session, url_for
+from flask import Blueprint, render_template, redirect, url_for, request, session, url_for, flash
 import libs.db_func as db_func
 import libs.schemas as schemas
 from libs.globals import user_collection, post_collection
@@ -8,7 +8,7 @@ admin_bp = Blueprint('admin', __name__, template_folder='templates', url_prefix=
 
 default = "default"
 
-@admin_bp.route("/database/<usr>", methods=["POST"])
+@admin_bp.route("/database/<usr>")
 def database(usr):
     if usr != "admin":
         if "user" in session:
@@ -70,3 +70,21 @@ def editEntry(usr, usrEdit):
 @admin_bp.route("/content/profile/database/<usr>")
 def database_route(usr):
     return redirect(url_for("admin.database", usr=session["user"]))
+
+@admin_bp.route("/database/deleteEntry/<usr>/<usrDelete>", methods=["POST"])
+def deleteEntry(usr, usrDelete, methods=["POST", "GET"]):
+    if usr != "admin":
+        if "user" in session:
+            return redirect(url_for("content.userHome", usr=session["user"], currentUsr=session["user"]))
+        else:
+            return redirect(url_for("auth.login", usr=default))
+    else:
+        if request.method == "POST":
+            if "delete" in request.form:
+                user_collection.delete_one({"Username": usrDelete})
+                post_collection.delete_many({"Author": usrDelete})
+                flash(f"User {usrDelete} has been deleted.", "success")
+                return redirect(url_for("admin.database", usr=session["user"]))
+            elif "cancel" in request.form:
+                return redirect(url_for("admin.database", usr=session["user"]))
+        return render_template("deleteEntry.html", usr=session["user"], usrDelete=usrDelete)
