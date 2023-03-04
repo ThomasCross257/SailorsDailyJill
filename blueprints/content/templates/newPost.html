@@ -27,22 +27,25 @@
                     <li class="nav-item">
                         <a class="navbar-brand nav-link active" aria-current="page" href="/">Home</a>
                     </li>
-                    {% if usr == None %}
+                    {% if currentUsr == None %}
                     <li class="nav-item">
                         <a class="nav-link" href="login">Login</a>
                     </li>
                     {% endif %}
-                    {% if usr != None %}
+                    {% if currentUsr != None %}
                     <li class="nav-item">
-                        <a class="nav-link" href="logout">Logout</a>
+                        <a class="nav-link" href="logout/{{ currentUsr }}">Logout</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="newPost">New Post</a>
+                        <a class="nav-link" href="profile">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="search/{{ currentUsr }}">Search</a>
                     </li>
                     {% endif %}
-                    {% if usr == "admin" %}
+                    {% if currentUsr == "admin" %}
                     <li class="nav-item">
-                        <a class="nav-link" href="database">Database</a>
+                        <a class="nav-link" href="/admin/database/{{ currentUsr }}">Database</a>
                     </li>
                     {% endif %}
                 </ul>
