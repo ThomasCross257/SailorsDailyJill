@@ -12,15 +12,34 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <!-- Custom Imports -->
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src ="{{ url_for('static', filename='css/dark.css') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function deletePrompt() {
+            var name = prompt("Are you sure you want to delete this user? (Type YES in all caps)", "No");
+            if (name != null) {
+                $.ajax({
+                    url: "/database/deleteEntry/<usr>/<usrDelete>",
+                    type: "POST",
+                    data: {delVerdict: delVerdict},
+                    success: function(response) {
+                        alert("User Deleted" );
+                    }
+                });
+            }
+        }
+    </script>
     <title>Database</title>
 </head>
 <body class="bg-dark">
     <div class="container-fluid">
         <div class="row justify-content-between">
             <div class="col-md-6 col-lg-6 col-xl-6">
-                <h1>Database</h1>
+                <h1 class="text-white">Database</h1>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-6">
                 <ul class="nav justify-content-end">
@@ -46,56 +65,44 @@
                 </ul>
             </div>
         </div>
-
         <div class="row mt-4">
             <div class="col-md-4 col-lg-4 col-xl-4">
-                <button id="Enter" class="btn btn-primary" onclick="DB_EntrySwap(this.id);">New Entry</button>
+                <a href="newEntry/{{ usr }}"><button type="submit" class="btn btn-primary">New Entry</button></a>           
             </div>
             <div class="col-md-4 col-lg-4 col-xl-4">
                 <div class="input-group">
                     <input id="db_Search" class="form-control" type="text" placeholder="Search">
                     <div class="input-group-append">
-                        <button id="SearchBtn" class="btn btn-secondary" onclick="javascript:void(0);">Search</button>
+                        <button id="SearchBtn" class="btn btn-secondary">Search</button>
                     </div>
                 </div>
             </div>
         </div>
-
         <div id="db_Page" class="mt-4">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Username</th>
-                        <th>2FA</th>
-                        <th>Blog URL</th>
+                        <th class="text-white">Username</th>
+                        <th class="text-white">Admin</th>
+                        <th class="text-white">ID</th>
+                        <th class="text-white">Blog</th>
+                        <th class="text-white">Edit</th>
+                        <th class="text-white">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for user in userList %}
                     <tr>
-                        <td>JohnDoe123</td>
-                        <td>Yes</td>
-                        <td><a href="javascript:void(0)">Here</a></td>
+                        <td class="text-white">{{ user.Username }}</td>
+                        <td class="text-white">{{ user.Admin }}</td>
+                        <td class="text-white">{{ user._id }}</td>
+                        <td class="text-white"><a class="userLink" href="{{url_for('content.userHome', currentUsr=session['user'], usr=user.Username)}}">{{ user.Username }}'s Blog</td>
+                        <td><a href="editEntry/{{ usr }}/{{ user.Username }}"><button class="btn btn-info">Edit</button></a></td>
+                        <td>><button class="btn btn-danger" onclick="deletePrompt()">Delete</button></td>
                     </tr>
+                    {%endfor%}
                 </tbody>
             </table>
         </div>
-
-        <div id="new_Entry" class="mt-4" style="display: none">
-            <button id="Return" class="btn btn-secondary" onclick="DB_EntrySwap(this.id)">Back to DB</button>
-            <div class="form-group mt-2">
-                <label for="db_Username"><h2>Username:</h2></label>
-                <input id="db_Username" class="form-control" type="text" placeholder="Username" required>
-            </div>
-            <div class="form-group">
-                <label for="db_2FA"><h2>2FA:</h2></label>
-                <input id="db_2FA" class="form-control" type="checkbox" placeholder="2FA">
-            </div>
-            <div class="form-group">
-                <label for="db_Blog"><h2>Blog URL:</h2></label>
-                <input id="db_Blog" class="form-control" type="text" placeholder="Blog">
-            </div>
-            <button id="Submit" class="btn btn-primary" onclick="DB_EntrySwap(this.id)">Submit</button>
-        </div>
-    </div>
 </body>
 </html>

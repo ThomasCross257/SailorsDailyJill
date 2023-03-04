@@ -3,6 +3,11 @@ import dns.resolver
 from bson import ObjectId
 import secrets
 import bcrypt
+from flask import redirect, session, url_for
+import bcrypt
+import libs.db_func as db_func
+import libs.schemas as schemas
+from libs.globals import user_collection
 
 def is_valid_email(email):
     # Check if the email address is valid according to the email format
@@ -78,3 +83,79 @@ def usernameExists(username, collection):
         return True
     else:
         return False
+def signedInUser(user, session):
+    if session["user"] == user:
+        return True
+    else:
+        return False
+def create_user(username, email, password, password_conf, admin):
+    # Check if any required fields are blank
+    if not all([username, email, password, password_conf, admin]):
+        return "Error: Required field(s) missing"
+    if admin == "True":
+        admin = True
+    else:
+        admin = False
+    # Hash the passwords
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password_conf = bcrypt.hashpw(password_conf.encode('utf-8'), bcrypt.gensalt())
+
+    # Check if the passwords match
+    if bcrypt.checkpw(password.encode('utf-8'), hashed_password_conf) == False:
+        return "Error: Passwords do not match"
+
+    # Check if the email is valid
+    if not db_func.is_valid_email(email):
+        return "Error: Invalid email address"
+
+    # Check if the username or email already exists
+    if user_collection.find_one({"Username": username}) is not None:
+        return "Error: Username already exists"
+    if user_collection.find_one({"Email": email}) is not None:
+        return "Error: Email already in use"
+
+    # Convert admin field to boolean
+    if admin == "True":
+        admin = True
+    else:
+        admin = False
+
+    # Generate a new user object using the schema
+    new_user = schemas.newUser(username, hashed_password, email, admin, "This is a new user.")
+
+    # Insert the new user into the database
+    user_collection.insert_one(new_user)
+
+    return "Success: User created"
+
+
+
+def update_user(usrEdit, username, email, password, passwordConf, admin):
+    # check for blank fields
+    if not username.strip() or not email.strip() or not password.strip() or not passwordConf.strip():
+        return redirect(url_for("admin.editEntry", usr=session["user"], usrEdit=usrEdit, error="Fields cannot be blank"))
+    
+    User = user_collection.find_one({"Username": usrEdit})
+    password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    passwordConf = bcrypt.hashpw(passwordConf.encode('utf-8'), bcrypt.gensalt())
+    
+    if bcrypt.checkpw(password, passwordConf):
+        if not db_func.is_valid_email(email):
+            return redirect(url_for("admin.editEntry", usr=session["user"], usrEdit=usrEdit, error="Not a valid Email address."))
+        if usernameExists(username, user_collection):
+            return redirect(url_for("admin.editEntry", usr=session["user"], usrEdit=usrEdit, error="User already exists"))
+        if user_collection.find_one({"Email address": email}) is not None:
+            return redirect(url_for("admin.editEntry", usr=session["user"], usrEdit=usrEdit, error="Email already in use"))
+        elif  user_collection.find_one({"Email address": email}) == User['Email address']:
+            pass
+        if admin == "True":
+            admin = True
+        else:
+            admin = False
+        update = {"$set": {"Username": username, "Password": password, "Email": email, "Admin": admin}}
+        user_collection.update_one({"Username": usrEdit}, update)
+        user_collection.delete_one({"Username": usrEdit})
+        return redirect(url_for("admin.database", usr=session["user"]))
+    else:
+        return redirect(url_for("admin.editEntry", usr=session["user"], usrEdit=usrEdit, error="Passwords do not match"))
+

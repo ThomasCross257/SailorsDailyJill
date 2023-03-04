@@ -14,10 +14,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-    <title>New Post</title>
+
+    <title>{{ userPage.Username }}'s archive</title>
 </head>
-<body class="bg-dark text-white">
-    <div class="container"> 
+<body class="bg-dark">
+    <div class="container">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -29,15 +30,18 @@
                     </li>
                     {% if usr == None %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
+                        <a class="nav-link" href="login">Login</a>
                     </li>
                     {% endif %}
                     {% if usr != None %}
                     <li class="nav-item">
                         <a class="nav-link" href="logout">Logout</a>
+                    </li>                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="newpost">New Post</a>
+                        <a class="nav-link" href="/search">Search</a>
                     </li>
                     {% endif %}
                     {% if usr == "admin" %}
@@ -48,11 +52,20 @@
                 </ul>
             </div>
         </nav>
-        <div class="jumbotron bg-secondary text-white"><h1>{{ title }}</h1></div>
-        <h3 class="text-white userLink">Author: <a href="#">{{ author }}</a></h3>
-        <h3 class="text-white">Date: {{ date }}</h3>
-        <h6>Tags: {{ tags }}</h6>
-        <p class="text-white">{{ content }}</p>
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="text-light">{{ userPage.Username }}'s Archives</h1>
+            </div>
+        </div>
+        <div class="row">
+            {% for post in posts %}
+            <div class="col-12">
+                <a href="post/{{post._id}}" class=" userLink">
+                    <h4>{{ post.Date }} - {{ post.Title}}</h4>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>

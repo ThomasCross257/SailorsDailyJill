@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 
-    <title>{{ userPage.Username }}'s archive</title>
+    <title>Home</title>
 </head>
 <body class="bg-dark">
     <div class="container">
@@ -50,12 +50,23 @@
                 </ul>
             </div>
         </nav>
-        <div class="row">
-            <div class="col-12">
-                <h1 class="text-center text-light">Archives</h1>
+            <div class="row">
+                <div class="col-12">
+                    <form action="#" method="post">
+                        <div class="form-group">
+                            <h1 class="formtext-center text-light">Search</h1>
+                            <div class="col-md-4 col-lg-4 col-xl-4">
+                                <div class="input-group">
+                                    <input id="db_Search" name="search" class="form-control" type="text" placeholder="Search">
+                                    <div class="input-group-append">
+                                        <button id="SearchBtn" class="btn btn-primary" onclick="javascript:void(0);">Search</button>
+                                    </div>
+                                </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            {% for post in posts %}
-            <a href="post/{{post._id}}"><h4>{{ post.Date }} {{ post.Title}}</h4></a>
+        </div>
     </div>
 </body>
 </html>

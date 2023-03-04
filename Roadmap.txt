@@ -8,15 +8,15 @@ Complete:
         Making blog posts: Store in database and use username to link them to the user.
         Randomized session key generator: Remove reliance on .env files
         Bootstrap JS: Needed for mobile devices
-        Profiles: Displaying User's posts for easier viewing, Editing profiles and adding personal descriptions
+        Profiles: Displaying User's posts for easier viewing, Editing profiles and adding personal descriptions\
+        Archives: User Post Archives that are broken down by date. Should be perfect to test today.
+        File reorganization and refactoring: Organization for readability.
+        Admin Dashboard: Administrative user interface for database and admin features.
+        QOL Changes: Delete posts, delete accounts, and other small changes.
 In Progress:
-    Archives: User Post Archives that are broken down by date. Should be perfect to test today.
-    Search Functions:A simple search page that queries the database. (Likely to rework tags.)
     Actual Homepage: Getting rid of lipsum text. (Include logo, additional information and a header.)
-    QOL Changes: Delete posts, delete accounts, and other small changes.
-    Admin Dashboard: Administrative user interface for database and admin features.
+    Search Functions:A simple search page that queries the database. (Likely to rework tags.)
 Not started:
-    File reorganization and refactoring: Organization for readability.
     Docker Migration: Begin research while you are ahead.
     Profile images(?): Need server/service where I can host them. (Might be done in docker)
     Jinja Templating: Because my websites look like an inconsistent hot mess.
