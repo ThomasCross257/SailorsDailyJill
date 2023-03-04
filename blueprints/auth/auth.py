@@ -4,7 +4,7 @@ from flask import Blueprint, redirect, render_template, request, session, url_fo
 import bcrypt
 import libs.schemas as schemas
 import libs.db_func as db_func
-from libs.globals import user_collection
+from libs.globals import user_collection, default
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
@@ -18,9 +18,9 @@ def login():
             session['user'] = user
             return redirect(url_for('content.userHome', usr=user, currentUsr=session["user"]))
         else:
-            return redirect(url_for('login', usr='default', error='Invalid Login Information.'))
+            return redirect(url_for('login', usr=default, currentUsr=default, error='Invalid Login Information.'))
     else:
-        return render_template('login.html', usr='default')
+        return render_template('login.html', usr=default, currentUsr=default)
 
 @auth_bp.route('/signup', methods=['POST', 'GET'])
 def signup():
@@ -32,9 +32,9 @@ def signup():
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         user_data = user_collection.find_one({'Username': user})
         if db_func.is_valid_email(email) == False:
-            return redirect(url_for('signup', usr='default', error='Not a valid Email address.'))
+            return redirect(url_for('signup', usr=default, currentUsr=default, error='Not a valid Email address.'))
         if user_data is not None:
-            return redirect(url_for('signup', usr='default', error='User already exists'))
+            return redirect(url_for('signup', usr=default, currentUsr=default , error='User already exists'))
         is_admin = False
         if user == 'admin':
             is_admin = True
@@ -42,7 +42,7 @@ def signup():
         user_collection.insert_one(new_user)
         return redirect(url_for('content.userHome', usr=user, currentUsr=session['user']))
     else:
-        return render_template('signup.html', usr='default')
+        return render_template('signup.html', usr=default, currentUsr=default)
 
 @auth_bp.route("/<usr>/logout")
 def logout_r(usr):

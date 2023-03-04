@@ -35,18 +35,18 @@
                     {% endif %}
                     {% if currentUsr != None %}
                     <li class="nav-item">
-                        <a class="nav-link" href="logout/{{ currentUsr }}">Logout</a>
+                        <a class="nav-link" href="url_for('auth.logout_r', usr={{ currentUsr }})">Logout</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="profile">Profile</a>
+                        <a class="nav-link" href="url_for('content.userHome', usr={{ currentUsr }})">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="search/{{ currentUsr }}">Search</a>
+                        <a class="nav-link" href="url_for('content.search', usr={{ currentUsr }})">Search</a>
                     </li>
                     {% endif %}
                     {% if currentUsr == "admin" %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/database/{{ currentUsr }}">Database</a>
+                        <a class="nav-link" href="url_for('admin.database', usr={{ currentUsr }})">Database</a>
                     </li>
                     {% endif %}
                 </ul>

@@ -20,7 +20,7 @@ def home():
         user = session["user"]
         return redirect(url_for("content.userHome", usr=user, currentUsr=session["user"]))
     else:
-        return render_template("index.html", usr=default)
+        return render_template("index.html", usr=default, currentUsr=default)
 
 if __name__ == "__main__":
 
