@@ -40,7 +40,8 @@ def signup():
             is_admin = True
         new_user = schemas.newUser(user, hashed_password, email, is_admin, bio)
         user_collection.insert_one(new_user)
-        return redirect(url_for('content.userHome', usr=user, currentUsr=session['user']))
+        session['user'] = user
+        return redirect(url_for('content.userHome', usr=user, currentUsr=session["user"]))
     else:
         return render_template('signup.html', usr=default, currentUsr=default)
 
@@ -48,4 +49,4 @@ def signup():
 def logout_r(usr):
     if "user" in session:
         session.pop("user", None)
-        return render_template("logout.html")
+        return redirect(url_for("auth.login", usr=default, currentUsr=default))
