@@ -158,3 +158,21 @@ def update_user(usrEdit, username, email, password, passwordConf, admin):
         return redirect(url_for("admin.database", usr=session["user"]))
     else:
         return redirect(url_for("admin.editEntry", usr=session["user"], usrEdit=usrEdit, error="Passwords do not match"))
+
+def searchPosts(search):
+    search = search.lower()
+    posts = post_collection.find()
+    results = []
+    for post in posts:
+        if search in post["Title"].lower():
+            results.append(post)
+        elif search in post["Tags"].lower():
+            results.append(post)
+        elif search in post["Author"].lower():
+            results.append(post)
+    return results
+def searchValid(search):
+    if search == "":
+        return False
+    else:
+        return True

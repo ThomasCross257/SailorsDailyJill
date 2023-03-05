@@ -134,9 +134,25 @@ def post_archive(usr, post_id):
 
 @content_bp.route("/search/<usr>", methods=["POST", "GET"])
 def search(usr):
-    return render_template("search.html", usr=usr, currentUser=session["user"])
+    if request.method == "POST":
+        search = request.form["search"]
+        if db_func.searchValid(search) == False:
+            return redirect(url_for("content.search", usr=usr, error="Invalid search.", currentUser=session["user"], search=None))
+        else:
+            search = db_func.searchPosts(search)
+            print(search)
+            search = search[::-1]
+            return render_template("search.html", usr=usr, currentUser=session["user"], search=search)
+    else:
+        if "user" in session:
+            return render_template("search.html", usr=usr, currentUser=session["user"], search=None)
+        else:
+            return redirect(url_for("auth.login", usr=default, currentUsr=default))
 @content_bp.route("/profile/search/<usr>")
 def search_profile(usr):
+    return redirect(url_for("content.search", usr=usr, currentUser=session["user"]))
+@content_bp.route("/search/search")
+def doubleSearch(usr):
     return redirect(url_for("content.search", usr=usr, currentUser=session["user"]))
 
 @content_bp.route("/profile/<usr>/archive")

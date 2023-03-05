@@ -24,8 +24,25 @@
                                 </div>
                         </div>
                     </form>
+                    {% if search %}
+                        <p class="text-white">Search results:</p>
+                        <br><br>
+                            {% for post in search %}
+                            <a href="post/{{post._id}}" class="text-decoration-none">
+                                <div class="container bg-secondary">
+                                    <h3 class="text-white">{{ post.Title }}</h3>
+                                    <h4 class="text-white">Author: {{ post.Author }}</h4>
+                                    <h4 class="text-white">Date: {{ post.Date }}</h4>
+                                </div>
+                            </a>                            
+                            {% endfor %}
+                            </ul>
+                            {% else %}
+                        <p class="text-white">No search results found.</p>
+                    {% endif %}
+                    </div>
                 </div>
-            </div>}
+            </div>
         {% endblock %}
     </div>
 </body>
