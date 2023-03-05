@@ -28,6 +28,10 @@
                                 <label for="signup_password"><h2 class="text-white">Password:</h2></label>
                                 <input name="signup_password" class="form-control" type="password" placeholder="Enter Password" required>
                             </div>
+                            <div class="form-group">
+                                <label for="signup_passwordVal"><h2 class="text-white">Verify Password:</h2></label>
+                                <input name="signup_passwordVal" class="form-control" type="password" placeholder="Enter Password" required>
+                            </div>
                             <button class="btn btn-primary">Sign Up</button>
                             {% if error %}
                                 <p class="error-message">Error: {{ error }}</p>
