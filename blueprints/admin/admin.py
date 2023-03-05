@@ -18,7 +18,7 @@ def database(usr):
     else:
         userList = []
         for user in user_collection.find():
-            userList.append(user)
+            userList.append(user)        
         return render_template("database.html", usr=session["user"], userList=userList)
 
 @admin_bp.route("/database/newEntry/<usr>", methods=["GET", "POST"])
@@ -88,3 +88,11 @@ def deleteEntry(usr, usrDelete, methods=["POST", "GET"]):
             elif "cancel" in request.form:
                 return redirect(url_for("admin.database", usr=session["user"]))
         return render_template("deleteEntry.html", usr=session["user"], usrDelete=usrDelete)
+@admin_bp.route("/database/search/<usr>", methods=["POST"])
+def searchEntry(usr):
+    if request.method == "POST":
+            if db_func.searchValid(request.form["search"]) == False:
+                return redirect(url_for("admin.database", usr=session["user"], error="Invalid search."))
+            else:
+                userList = db_func.searchUsers(request.form["search"])
+                return render_template("database.html", usr=session["user"], userList=userList)

@@ -1,5 +1,5 @@
 Complete:
-    Basic website structure
+    Website:
         Homepage
         Sessions
         Login and Logout functionality.
@@ -15,13 +15,12 @@ Complete:
         QOL Changes: Delete posts, delete accounts, and other small changes.
         Actual Homepage: Getting rid of lipsum text. (Include logo, additional information and a header.)
         Jinja Templating: Because my websites look like an inconsistent hot mess.
+        Search Functions:A simple search page that queries the database. (Likely to remove tags and instead just search by title, author or content.)
 In Progress:
-    Search Functions:A simple search page that queries the database. (Likely to remove tags and instead just search by title, author or content.)
-Not started:
-    Docker Migration: Begin research while you are ahead.
+    Docker Migration: Migrating the website to a docker container.
     Profile images(?): Need server/service where I can host them. (Might be done in docker)
     Kubernetes Integration: Likely begin in late march.
-Post Website completion:
-    Kubernetes testing
-    Email notifications
-    Custom Themes?
+    Verification methods for new users: Email 2FA, Google 2FA, etc.
+    Website redesign: New color scheme, new layout, new everything.
+    Website security: SSL, HTTPS, etc.
+    Kubernetes Testing: Testing the website on a kubernetes cluster.

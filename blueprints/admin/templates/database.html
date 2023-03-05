@@ -15,11 +15,13 @@
                 <a href="newEntry/{{ usr }}"><button type="submit" class="btn btn-primary">New Entry</button></a>           
             </div>
             <div class="col-md-4 col-lg-4 col-xl-4">
+                <form method="post" action="{{url_for('admin.searchEntry', usr=session['user'])}}">
                 <div class="input-group">
-                    <input id="db_Search" class="form-control" type="text" placeholder="Search">
+                    <input id="db_Search" class="form-control" type="text" name="search" placeholder="Search">
                     <div class="input-group-append">
                         <button id="SearchBtn" class="btn btn-secondary">Search</button>
                     </div>
+                </form>
                 </div>
             </div>
         </div>

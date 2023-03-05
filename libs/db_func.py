@@ -176,3 +176,13 @@ def searchValid(search):
         return False
     else:
         return True
+def searchUsers(search):
+    search = search.lower()
+    users = user_collection.find()
+    results = []
+    for user in users:
+        if search in user["Username"].lower():
+            results.append(user)
+        elif search in user["Email address"].lower():
+            results.append(user)
+    return results
