@@ -44,6 +44,11 @@ Enter the folder where your repository was cloned to and simply run
 flask --app main run
 ```
 You should get an output stating what IP it's running on on a local development server.
+
+For a production envrionment, use
+```
+python waitress-serve.py
+```
 <hr>
 <h2>Docker Install</h2>
 Clone this repository much like the local install.
@@ -71,7 +76,7 @@ ENV FLASK_APP=main.py
 ENV FLASK_ENV=production
 ENV MONGO_URI= <your mongo URI>
 
-CMD ["flask", "run", "--host", "0.0.0.0"]
+CMD ["python", "waitress-serve.py"]
 ```
 Then run the following
 ```docker
