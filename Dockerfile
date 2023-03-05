@@ -1,17 +1,21 @@
-FROM python:latest
+# Base image
+FROM python:3.9
 
-WORKDIR /SDL-docker
+# Set working directory
+WORKDIR /app
 
-COPY main.py /SDL-docker/main.py
+# Copy all files to the container
+COPY . .
 
-COPY templates /SDL-docker/templates
+# Install dependencies
+RUN pip install -r requirements.txt
 
-COPY static /SDL-docker/static
+# Expose the port used by the Flask app
+EXPOSE 5000
 
-COPY requirements.txt /SDL-docker/requirements.txt
+# Set environment variables
+ENV FLASK_APP=main.py
+ENV FLASK_ENV=production
 
-COPY .env /SDL-docker/.env
-
-RUN pip install /SDL-docker/requirements.txt
-
-CMD ["flask", "run", "--host=0.0.0.0"]
+# Start the Flask app
+CMD ["flask", "run", "--host", "0.0.0.0"]

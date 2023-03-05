@@ -6,7 +6,7 @@
         <img src ="static/img/ApplicationLogo.png" alt=Bottle with a Compass inside>
         <br>
         Sailor's Daily Jill
-        <h2 align='center'>Providing the navigation for daily needs.</h2>
+        <h2 align='center'>Providing the navigation for your daily needs.</h2>
     </h1>
 </div>
 <br>
@@ -15,3 +15,4 @@ Taking inspiration from sailing terminologies, a "Jill" is a measurement of liqu
 <br>
 This project aims to fuilfil your daily needs with a flask-basked template that can easily dockerized and managed via kubernetes.
 <h1>Installation</h1>
+Installation will be broken down into two 
