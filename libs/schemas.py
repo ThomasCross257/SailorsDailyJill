@@ -33,3 +33,10 @@ def newReply(reply, author, date, comment_id):
         "Date" : date
     }
     return new_reply
+def followList(username, following, follower):
+    new_follow = {
+        "Username" : username,
+        "Following" : following,
+        "Followers" : follower
+    }
+    return new_follow

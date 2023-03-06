@@ -7,7 +7,7 @@ from flask import redirect, session, url_for
 import bcrypt
 import libs.db_func as db_func
 import libs.schemas as schemas
-from libs.globals import user_collection, post_collection
+from libs.globals import user_collection, post_collection, follow_collection
 
 def is_valid_email(email):
     # Check if the email address is valid according to the email format
@@ -200,3 +200,27 @@ def registerAccount(username, email, password, passwordConf):
     new_user = schemas.newUser(username, hashed_password, email, False, "This is a new user.")
     user_collection.insert_one(new_user)
     return "Success: User created"
+def followUser(user, follow):
+    if user == follow:
+        return "Error: Cannot follow yourself"
+    if user_collection.find_one({"Username": follow}) is None:
+        return "Error: User does not exist"
+    createFollowSchema(user)
+    createFollowSchema(follow)
+    if user_collection.find_one({"Username": user})["Following"] is not None:
+        if follow in user_collection.find_one({"Username": user})["Following"]:
+            follow_collection.update_one({"Username": user}, {"$pop": {"Following": follow}})
+            follow_collection.update_one({"Username": follow}, {"$pop": {"Followers": user}})
+            return "Success: User unfollowed"
+    follow_collection.update_one({"Username": user}, {"$push": {"Following": follow}})
+    follow_collection.update_one({"Username": follow}, {"$push": {"Followers": user}})
+    return "Success: User followed"
+def isFollowing(user, follow):
+    if follow_collection.find_one({"Username": user})["Following"] is not None:
+        if follow in user_collection.find_one({"Username": user})["Following"]:
+            return True
+    return False
+def createFollowSchema(user):
+    if follow_collection.find_one({"Username": user}) is None:
+        new_follow = schemas.newFollow(user, [], [])
+        follow_collection.insert_one(new_follow)

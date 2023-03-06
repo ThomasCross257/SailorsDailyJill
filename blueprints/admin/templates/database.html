@@ -45,6 +45,7 @@
                         <td class="text-white">{{ user._id }}</td>
                         <td class="text-white"><a class="userLink" href="{{url_for('content.userHome', currentUsr=session['user'], usr=user.Username)}}">{{ user.Username }}'s Blog</td>
                         <td><a href="editEntry/{{ usr }}/{{ user.Username }}"><button class="btn btn-info">Edit</button></a></td>
+                        <td><a href="#"><button class="btn btn-warning">Clear following</button></a></td>
                         <form method="Post" action="{{url_for('admin.deleteEntry', usr=session['user'], usrDelete=user.Username)}}">
                         <td><button class="btn btn-danger">Delete</button></td>
                         </form>

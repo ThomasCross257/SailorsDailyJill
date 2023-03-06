@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, request, session, url_for
+from flask import Blueprint, redirect, render_template, request, session, url_for, flash
 import bcrypt
 import libs.schemas as schemas
 import libs.db_func as db_func
@@ -13,7 +13,7 @@ content_bp = Blueprint('content', __name__, template_folder='templates', url_pre
 todaysDate = date.today().strftime("%m/%d/%y")
 
 
-@content_bp.route("/profile/<usr>")
+@content_bp.route("/profile/<usr>", methods=["GET", "POST"])
 def userHome(usr):
     userPage = user_collection.find_one({"Username": usr})
     userPosts = post_collection.find({"Author": usr}).limit(5)
@@ -21,10 +21,21 @@ def userHome(usr):
     for post in userPosts:
         if post["Author"] == usr:
             postList.append(post)
-    postList = postList[::-1]
-    print (type(postList)) 
+    postList = postList[::-1] 
     if "user" in session:
-        return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList), currentUsr=session["user"])
+        isFollowing = db_func.isFollowing(session["user"], usr)
+        if request.method == "POST":
+            followResult = db_func.followUser(usr, session["user"])
+            if followResult == "Success":
+                if isFollowing == True:
+                    flash(f"You unfollowed {usr}.", "success")
+                    return redirect(url_for("content.userHome", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"]))
+                else:
+                    flash(f"You followed {usr}.", "success")
+                    return redirect(url_for("content.userHome", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"]))
+            
+        else:
+            return render_template("profilePage.html", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"])
     else:
         return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList), currentUsr=default)
 @content_bp.route("/profile/logout/<usr>")
@@ -168,3 +179,16 @@ def archive(usr):
         return render_template("archive.html", usr=usr, posts=postList, postLen=len(postList), userPage=userPage, currentUser=session["user"])
     else:
         return render_template("archive.html", usr=usr, posts=postList, postLen=len(postList), userPage=userPage, currentUser=default)
+    
+@content_bp.route("/feed/<currentUsr>")
+def feed(currentUsr):
+    if "user" in session:
+        return render_template("feed.html", currentUser=session["user"])
+    else:
+        return redirect(url_for("auth.login", usr=default, currentUsr=default))
+@content_bp.route("/feed")
+def feed_redirect():
+    return redirect(url_for("content.feed", currentUsr=session["user"]))
+@content_bp.route("/profile/feed")
+def feed_profile():
+    return redirect(url_for("content.feed", currentUsr=session["user"]))

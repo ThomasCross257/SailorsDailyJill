@@ -14,4 +14,5 @@ admin_db = get_DB('admin')
 
 user_collection = accounts_db["users"]
 post_collection = accounts_db["posts"]
+follow_collection = accounts_db["follows"]
 default = None
