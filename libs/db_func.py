@@ -186,3 +186,20 @@ def searchUsers(search):
         elif search in user["Email address"].lower():
             results.append(user)
     return results
+
+def registerAccount(username, email, password, passwordConf):
+    if not all([username, email, password, passwordConf]):
+        return "Error: Required field(s) missing"
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hashed_verify = bcrypt.hashpw(passwordConf.encode('utf-8'), bcrypt.gensalt())
+    if bcrypt.checkpw(hashed_password, hashed_verify) == False:
+        return "Error: Passwords do not match"
+    if not is_valid_email(email):
+        return "Error: Invalid email address"
+    if usernameExists(username, user_collection):
+        return "Error: Username already exists"
+    if user_collection.find_one({"Email address": email}) is not None:
+        return "Error: Email already in use"
+    new_user = schemas.newUser(username, hashed_password, email, False, "This is a new user.")
+    user_collection.insert_one(new_user)
+    return "Success: User created"

@@ -29,23 +29,12 @@ def signup():
         password = request.form['signup_password']
         verify_password = request.form['signup_passwordVal']
         email = request.form['signup_email']
-        bio = "This user hasn't updated their bio yet."
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        hashed_verify = bcrypt.hashpw(verify_password.encode('utf-8'), bcrypt.gensalt())
-        if bcrypt.checkpw(hashed_password, hashed_verify) == False:
-            return redirect(url_for('signup', usr=default, currentUsr=default, error='Passwords do not match.'))
-        user_data = user_collection.find_one({'Username': user})
-        if db_func.is_valid_email(email) == False:
-            return redirect(url_for('signup', usr=default, currentUsr=default, error='Not a valid Email address.'))
-        if user_data is not None:
-            return redirect(url_for('signup', usr=default, currentUsr=default , error='User already exists'))
-        is_admin = False
-        if user == 'admin':
-            is_admin = True
-        new_user = schemas.newUser(user, hashed_password, email, is_admin, bio)
-        user_collection.insert_one(new_user)
-        session['user'] = user
-        return redirect(url_for('content.userHome', usr=user, currentUsr=session["user"]))
+        registrationResult = db_func.registerAccount(user, email, password, verify_password)
+        if  "Error" in registrationResult:
+            return redirect(url_for('signup', usr=default, currentUsr=default, error=registrationResult))
+        else: 
+            session['user'] = user
+            return redirect(url_for('content.userHome', usr=user, currentUsr=session["user"]))
     else:
         return render_template('signup.html', usr=default, currentUsr=default)
 

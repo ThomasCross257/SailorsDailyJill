@@ -1,12 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session, url_for, flash
 import libs.db_func as db_func
-import libs.schemas as schemas
-from libs.globals import user_collection, post_collection
-import bcrypt
+from libs.globals import user_collection, post_collection, default
 
 admin_bp = Blueprint('admin', __name__, template_folder='templates', url_prefix="/admin")
-
-default = "default"
 
 @admin_bp.route("/database/<usr>")
 def database(usr):
