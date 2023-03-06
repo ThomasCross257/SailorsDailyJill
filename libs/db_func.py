@@ -45,9 +45,6 @@ def secretCreate():
     session_secret = secrets.token_hex(16)
     return session_secret
 
-def profileUpdate_Check(usrCheck,emailCheck,passCheck):
-    
-    return False
 def profileUpdate(newUsername, newEmail, newPassword, verifyPassword, usr, newBio, collection):
     error = None
     hashed_pass = bcrypt.hashpw(newPassword.encode('utf-8'), bcrypt.gensalt())

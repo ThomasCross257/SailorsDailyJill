@@ -16,8 +16,8 @@ Complete:
         Actual Homepage: Getting rid of lipsum text. (Include logo, additional information and a header.)
         Jinja Templating: Because my websites look like an inconsistent hot mess.
         Search Functions:A simple search page that queries the database. (Likely to remove tags and instead just search by title, author or content.)
+        Docker Migration: Migrating the website to a docker container.
 In Progress:
-    Docker Migration: Migrating the website to a docker container.
     Profile images(?): Need server/service where I can host them. (Might be done in docker)
     Kubernetes Integration: Likely begin in late march.
     Verification methods for new users: Email 2FA, Google 2FA, etc.

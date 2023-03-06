@@ -16,17 +16,24 @@ Taking inspiration from sailing terminologies, a "Jill" is a measurement of liqu
 This project aims to fuilfil your daily needs with a flask-basked template that can easily dockerized and managed via kubernetes.
 <hr>
 <h1>Features</h1>
-* Flask application with login and signup functionality.
-* Blog posting capabilities.
-* Query the database by searching for posts made by other users
-* Use the Admin dashboard to create and remove users as will with a simple, friendly interface
-* Mobile support via boostrap
+<ul>
+<li>Flask application with login and signup functionality.</li>
+<li>Blog posting capabilities.</li>
+<li>Query the database by searching for posts made by other users</li>
+<li>Use the Admin dashboard to create and remove users as will with a simple, friendly interface 
+</li>
+<li>
+Mobile support via boostrap
+</li>
+</ul>
 <h2>Future features</h2>
-* Profile pictures
-* Kubernetes Integration
-* Verification methods like 2FA
-* Redesign and support for color schemes
-* And much more!
+<ul>
+<li>Profile pictures</li>
+<li>Kubernetes Integration</li>
+<li>Verification methods like 2FA</li>
+<li>Redesign and support for color schemes</li>
+<li>And much more!</li>
+</ul>
 <h1>Installation</h1>
 This repo supports two methods of running and building the application.
 <br>
