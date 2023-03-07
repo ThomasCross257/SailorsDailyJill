@@ -5,8 +5,6 @@ from blueprints.auth.auth import auth_bp
 from blueprints.content.content import content_bp
 from blueprints.errors.errors import error_bp
 from libs.globals import default
-from libs.schemas import followList
-from libs.db_func import createFollowSchema
 app = Flask(__name__)
 app.secret_key = db_func.secretCreate()
 
@@ -21,9 +19,6 @@ def home():
         user = session["user"]
         return redirect(url_for("content.userHome", usr=user, currentUsr=session["user"]))
     else:
-        if request.method == "POST":
-            createFollowSchema("admin")
-            flash("Follow schema created.")
         return render_template("index.html", usr=default, currentUsr=default)
 
 if __name__ == "__main__":
