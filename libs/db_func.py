@@ -200,27 +200,29 @@ def registerAccount(username, email, password, passwordConf):
     new_user = schemas.newUser(username, hashed_password, email, False, "This is a new user.")
     user_collection.insert_one(new_user)
     return "Success: User created"
-def followUser(user, follow):
+def followUser(follow, user):
     if user == follow:
         return "Error: Cannot follow yourself"
     if user_collection.find_one({"Username": follow}) is None:
         return "Error: User does not exist"
     createFollowSchema(user)
     createFollowSchema(follow)
-    if user_collection.find_one({"Username": user})["Following"] is not None:
-        if follow in user_collection.find_one({"Username": user})["Following"]:
-            follow_collection.update_one({"Username": user}, {"$pop": {"Following": follow}})
-            follow_collection.update_one({"Username": follow}, {"$pop": {"Followers": user}})
+    if follow_collection.find_one({"Username": user})["Following"] is not None:
+        if follow in follow_collection.find_one({"Username": user})["Following"]:
+            follow_collection.update_one({"Username": follow}, {"$pull": {"Followers": user}})
+            follow_collection.update_one({"Username": user}, {"$pull": {"Following": follow}})
             return "Success: User unfollowed"
-    follow_collection.update_one({"Username": user}, {"$push": {"Following": follow}})
-    follow_collection.update_one({"Username": follow}, {"$push": {"Followers": user}})
-    return "Success: User followed"
+        else:
+            follow_collection.update_one({"Username": follow}, {"$push": {"Followers": user}})
+            follow_collection.update_one({"Username": user}, {"$push": {"Following": follow}})
+            return "Success: User followed"
+
 def isFollowing(user, follow):
     if follow_collection.find_one({"Username": user})["Following"] is not None:
-        if follow in user_collection.find_one({"Username": user})["Following"]:
+        if follow in follow_collection.find_one({"Username": user})["Following"]:
             return True
     return False
 def createFollowSchema(user):
     if follow_collection.find_one({"Username": user}) is None:
-        new_follow = schemas.newFollow(user, [], [])
+        new_follow = schemas.followList(user, [], [])
         follow_collection.insert_one(new_follow)

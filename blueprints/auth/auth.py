@@ -38,7 +38,7 @@ def signup():
     else:
         return render_template('signup.html', usr=default, currentUsr=default)
 
-@auth_bp.route("/<usr>/logout")
+@auth_bp.route("/logout/<usr>")
 def logout_r(usr):
     if "user" in session:
         session.pop("user", None)

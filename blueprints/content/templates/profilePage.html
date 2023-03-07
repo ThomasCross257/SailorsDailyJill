@@ -12,15 +12,22 @@
         {% block content %}
         <div class="row mt-4">
             <div class="col-md-6">
-                <button class="btn btn-primary">Follow</button>
+                <form method="POST" class="d-flex">
+                {% if currentUsr != userPage.Username and currentUsr != None %}
+                    {% if isFollowing == False %}
+                        <button class="btn btn-primary">Follow</button>
+                    {% endif %}
+                    {% if isFollowing == True %}
+                        <button class="btn btn-danger">Unfollow</button>
+                    {% endif %}
+                {% endif %}
+                </form>
                 <a href="/content/profile/{{ userPage.Username }}/archive"><button class="btn btn-info">Archive</button></a>
                 {% if currentUsr == userPage.Username %}
                 <a href="/content/profile/edit-profile/{{ currentUsr }}"> 
                 <button class="btn btn-success">Edit Profile</button></a>
                 <a href="/content/profile/create-post/{{ currentUsr }}"> 
                 <button class="btn btn-secondary">Create Post</button></a>
-                {% endif %}
-                {% if currentUsr != userPage.Username %}
                 {% endif %}
             </div>
         </div>

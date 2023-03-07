@@ -26,16 +26,18 @@ def userHome(usr):
         isFollowing = db_func.isFollowing(session["user"], usr)
         if request.method == "POST":
             followResult = db_func.followUser(usr, session["user"])
-            if followResult == "Success":
+            if "Success" in followResult:
                 if isFollowing == True:
                     flash(f"You unfollowed {usr}.", "success")
-                    return redirect(url_for("content.userHome", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"]))
+                    return redirect(url_for("content.userHome", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"], usr=usr))
                 else:
                     flash(f"You followed {usr}.", "success")
-                    return redirect(url_for("content.userHome", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"]))
-            
+                    return redirect(url_for("content.userHome", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"], usr=usr))
+            else:
+                flash(followResult)
+                return redirect(url_for("content.userHome", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"], usr=usr))
         else:
-            return render_template("profilePage.html", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"])
+            return render_template("profilePage.html", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"], usr=usr)
     else:
         return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList), currentUsr=default)
 @content_bp.route("/profile/logout/<usr>")
