@@ -1,12 +1,12 @@
 from flask import Flask, redirect, url_for, render_template, session, abort, request,flash
-import libs.db_func as db_func
+import libs.auth_func as auth_func
 from blueprints.admin.admin import admin_bp
 from blueprints.auth.auth import auth_bp
 from blueprints.content.content import content_bp
 from blueprints.errors.errors import error_bp
 from libs.globals import default
 app = Flask(__name__)
-app.secret_key = db_func.secretCreate()
+app.secret_key = auth_func.secretCreate()
 
 app.register_blueprint(admin_bp)
 app.register_blueprint(auth_bp)

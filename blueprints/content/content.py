@@ -1,7 +1,8 @@
 from flask import Blueprint, redirect, render_template, request, session, url_for, flash
 import bcrypt
 import libs.schemas as schemas
-import libs.db_func as db_func
+import libs.auth_func as au_func
+import libs.content_func as cl_func
 from datetime import date
 from bson.objectid import ObjectId
 from libs.globals import user_collection, post_collection, default, follow_collection
@@ -23,9 +24,9 @@ def userHome(usr):
             postList.append(post)
     postList = postList[::-1] 
     if "user" in session:
-        isFollowing = db_func.isFollowing(session["user"], usr)
+        isFollowing = cl_func.isFollowing(session["user"], usr)
         if request.method == "POST":
-            followResult = db_func.followUser(usr, session["user"])
+            followResult = cl_func.followUser(usr, session["user"])
             if "Success" in followResult:
                 if isFollowing == True:
                     flash(f"You unfollowed {usr}.", "success")
@@ -49,7 +50,7 @@ def newpost(usr):
         tags = request.form["tags"]
         author = usr
         date = todaysDate
-        post_id = db_func.generate_post_id()
+        post_id = cl_func.generate_post_id()
         new_post = {
         '_id' : post_id,
         "Title" : title,
@@ -59,12 +60,12 @@ def newpost(usr):
         "Tags" : tags
         }
         schemas.newPost(title, content, author, todaysDate, tags, post_id)
-        if db_func.tagsValid(tags) == False:
+        if cl_func.tagsValid(tags) == False:
             return redirect(url_for("content.newpost", usr=usr, error="Invalid tags.", currentUsr=session["user"]))
         post_collection.insert_one(new_post)
         return redirect(url_for("content.viewpost", post_id=post_id, usr=usr, currentUsr=session["user"]))
     else:
-        if db_func.signedInUser(usr, session) == True:
+        if "user" in session:
             return render_template("newPost.html", usr=usr, currentUser=session["user"])
         else:
             return redirect(url_for("auth.login", usr=default))
@@ -78,8 +79,9 @@ def editProfile(usr):
         newPassword = request.form["password"]
         passwordVerify = request.form["confirmPassword"]
         newEmail = request.form["email"]
+        profilePic = request.form["profilePic"]
         if newUsername:
-            if db_func.usernameExists(newUsername, user_collection) == True:
+            if au_func.usernameExists(newUsername, user_collection) == True:
                 return redirect(url_for("editProfile", usr=usr, error="Username already exists."))
             elif newUsername == usr:
                 return redirect(url_for("editProfile", usr=usr, error="Username is the same as the current one."))
@@ -96,14 +98,14 @@ def editProfile(usr):
             else:
                 return redirect (url_for("content.editProfile", usr=usr, error="Passwords do not match."))
         if newEmail:
-            if db_func.is_valid_email(newEmail) == False:
+            if au_func.is_valid_email(newEmail) == False:
                 return redirect(url_for("content.editProfile", usr=usr, error="Not a valid Email address."));
             else:
                 user_collection.update_one({'_id': ObjectId(user["_id"])}, {'$set': {'Email address': newEmail}})
         return redirect(url_for("content.userHome", usr=usr))
         
     else:
-        if db_func.signedInUser(usr, session) == True:
+        if "user" in session and usr == session["user"]:
             return render_template("editProfile.html", usr=usr, currentUsr=session["user"])
         else:
             return redirect(url_for("login", usr=default, currentUsr=default))
@@ -123,7 +125,7 @@ def viewpost(post_id, usr):
         tags = current_post["Tags"]
     except OperationFailure:
         return render_template("404.html")
-    if db_func.signedInUser(usr, session) == True:
+    if "user" in session:
         return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, currentUser=session["user"])
     else:
         return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, currentUser=default)
@@ -146,10 +148,10 @@ def post_archive(usr, post_id):
 def search(usr):
     if request.method == "POST":
         search = request.form["search"]
-        if db_func.searchValid(search) == False:
+        if cl_func.searchValid(search) == False:
             return redirect(url_for("content.search", usr=usr, error="Invalid search.", currentUser=session["user"], search=None))
         else:
-            search = db_func.searchPosts(search)
+            search = cl_func.searchPosts(search)
             print(search)
             search = search[::-1]
             return render_template("search.html", usr=usr, currentUser=session["user"], search=search)
@@ -174,7 +176,7 @@ def archive(usr):
         if post["Author"] == usr:
             postList.append(post)
     postList = postList[::-1]
-    if db_func.signedInUser(usr, session) == True:
+    if "user" in session == True:
         return render_template("archive.html", usr=usr, posts=postList, postLen=len(postList), userPage=userPage, currentUser=session["user"])
     else:
         return render_template("archive.html", usr=usr, posts=postList, postLen=len(postList), userPage=userPage, currentUser=default)
@@ -193,7 +195,6 @@ def feed(currentUsr):
                 postList.append(post)
 
         postList = postList[::-1]
-        print(postList)
         return render_template("feed.html", currentUsr=session["user"], posts=postList, postLen=len(postList))
 
     else:

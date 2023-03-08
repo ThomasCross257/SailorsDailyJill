@@ -26,6 +26,8 @@
                         <input name="signin_password" class="form-control" type="password" placeholder="Enter Password" required>
                     </div>
                     <button class="btn btn-primary">Sign In</button>
+                    <br><br>
+                    <p class="text-white"><input type="checkbox" name="remember_me" value="1"> Remember me</p>
                     {% if error %}
                         <p class="error-message">Error: {{ error }}</p>
                     {% endif %}

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session, url_for, flash
-import libs.db_func as db_func
+import libs.admin_func as admin_func
+import libs.content_func as cl_func
 from libs.globals import user_collection, post_collection, default
 
 admin_bp = Blueprint('admin', __name__, template_folder='templates', url_prefix="/admin")
@@ -32,7 +33,7 @@ def newEntry(usr):
         adminTxt = request.form["admin"]
         print(username, email, password, password_conf, adminTxt)
         # Call the create_user function
-        result = db_func.create_user(username, email, password, password_conf, adminTxt)
+        result = admin_func.create_user(username, email, password, password_conf, adminTxt)
 
         if result.startswith("Error"):
             # If there was an error, redirect to newEntry with an error message
@@ -57,7 +58,7 @@ def editEntry(usr, usrEdit):
             password = request.form["password"]
             passwordConf = request.form["passwordConf"]
             admin = request.form["admin"]
-            return db_func.update_user(usrEdit, username, email, password, passwordConf, admin)
+            return admin_func.update_user(usrEdit, username, email, password, passwordConf, admin)
         else:
             User = user_collection.find_one({"Username": usrEdit})
             print(User)
@@ -87,8 +88,8 @@ def deleteEntry(usr, usrDelete, methods=["POST", "GET"]):
 @admin_bp.route("/database/search/<usr>", methods=["POST"])
 def searchEntry(usr):
     if request.method == "POST":
-            if db_func.searchValid(request.form["search"]) == False:
+            if cl_func.searchValid(request.form["search"]) == False:
                 return redirect(url_for("admin.database", usr=session["user"], error="Invalid search."))
             else:
-                userList = db_func.searchUsers(request.form["search"])
+                userList = admin_func.searchUsers(request.form["search"])
                 return render_template("database.html", usr=session["user"], userList=userList)
