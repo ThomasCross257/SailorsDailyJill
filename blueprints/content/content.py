@@ -193,7 +193,6 @@ def feed(currentUsr):
             userPosts = post_collection.find({"Author": user})
             for post in userPosts:
                 postList.append(post)
-
         postList = postList[::-1]
         return render_template("feed.html", currentUsr=session["user"], posts=postList, postLen=len(postList))
 

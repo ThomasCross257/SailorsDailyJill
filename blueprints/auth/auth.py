@@ -1,29 +1,33 @@
 # auth.py
 
-from flask import Blueprint, redirect, render_template, request, session, url_for
+from flask import Blueprint, redirect, render_template, request, session, url_for, flash, abort
 import bcrypt
-import libs.schemas as schemas
 import libs.auth_func as auth_func
 from libs.globals import user_collection, default
+from app import csrf
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
 @auth_bp.route('/login', methods=['POST', 'GET'])
 def login():
+    form = auth_func.LoginForm()
     if request.method == 'POST':
-        user = request.form['signin_username']
-        password = request.form['signin_password']
         remember = True if request.form.get('remember') else False
-        user_data = user_collection.find_one({'Username': user})
-        if user_data and bcrypt.checkpw(password.encode('utf-8'), user_data['Password']):
-            session['user'] = user
-            if remember:
-                session.permanent = True
-            return redirect(url_for('content.userHome', usr=user, currentUsr=session["user"]))
+        if form.validate_on_submit():
+            if not csrf.validate_csrf(form.csrf_token.data):
+                abort(400, 'Invalid CSRF token')
+            user = form.username.data
+            password = form.password.data
+            user_data = user_collection.find_one({'Username': user})
+            if user_data and bcrypt.checkpw(password.encode('utf-8'), user_data['Password']):
+                session['user'] = user
+                if remember:
+                    session.permanent = True
+                return redirect(url_for('content.userHome', usr=user, currentUsr=session["user"]))
         else:
             return redirect(url_for('login', usr=default, currentUsr=default, error='Invalid Login Information.'))
     else:
-        return render_template('login.html', usr=default, currentUsr=default)
+        return render_template('login.html', usr=default, currentUsr=default, form=form)
 
 @auth_bp.route('/signup', methods=['POST', 'GET'])
 def signup():
