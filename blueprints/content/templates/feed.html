@@ -11,19 +11,22 @@
   {% block content %}
     <div class="container">
         <div class="row">
-        <div class="col-4">
-            {% if postLen > 0 %}
-                {% for post in posts %}
-                <div class="card bg-success">
-                <div class="card-body">
-                    <h4 class="card-title text-white">{{ post.Title }}</h4>
-                    <h5 class="card-subtitle mb-2 text-white">{{ post.Author }}</h5>
-                    <h6 class="card-subtitle mb-2 text-white">{{ post.Date }}</h6>
-                    <p class="card-text text-white">{{ post.Tags }}</p>
-                    <a href="{{ url_for('content.viewpost', post_id=post.id, usr=post.Author, currentUsr=session['user']) }}" class="card-link text-white">Click to view</a>
-                </div>
-                </div>
-                {% endfor %}
+        <div class="col-10">
+            <div class="card-group">
+                {% if postLen > 0 %}
+                    {% for post in posts %}
+                    <div class="card bg-secondary">
+                        <div class="card-body">
+                            <h4 class="card-title text-white">{{ post.Title }}</h4>
+                            <h5 class="card-subtitle mb-2 text-white">{{ post.Author }}</h5>
+                            <h6 class="card-subtitle mb-2 text-white">{{ post.Date }}</h6>
+                            <p class="card-text text-white">Tags: {{ post.Tags }}</p>
+                            <a href="{{ url_for('content.viewpost', post_id=post._id, usr=post.Author, currentUsr=session['user']) }}" class="card-link text-white">Click to view</a>
+                        </div>
+                    </div>
+                    <br>
+                    {% endfor %}
+            </div>
             {% else %}
             <div class="container">
             <h1 class="text-white text-center">Your feed is empty! Follow some people and it'll fill up!</h1>

@@ -17,8 +17,10 @@ Complete:
         Jinja Templating: Because my websites look like an inconsistent hot mess.
         Search Functions:A simple search page that queries the database. (Likely to remove tags and instead just search by title, author or content.)
         Docker Migration: Migrating the website to a docker container.
+        Feed Functionality: Allows users to see content from people that they follow.
 In Progress:
     Profile images(?): Need server/service where I can host them. (Might be done in docker)
+    Nginx Integration: Need to integrate nginx into the docker container.
     Kubernetes Integration: Likely begin in late march.
     Verification methods for new users: Email 2FA, Google 2FA, etc.
     Website redesign: New color scheme, new layout, new everything.

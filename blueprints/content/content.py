@@ -183,15 +183,15 @@ def archive(usr):
 def feed(currentUsr):
     if "user" in session:
         following = follow_collection.find({"Username": session["user"]})
-        followingList = []
-        for user in following:
-            followingList.append(user["Following"])
-        print(followingList)
         postList = []
-        for user in followingList:
+        followList = []
+        for user in following:
+            followList.extend(user["Following"])
+        for user in followList:
             userPosts = post_collection.find({"Author": user})
             for post in userPosts:
                 postList.append(post)
+
         postList = postList[::-1]
         print(postList)
         return render_template("feed.html", currentUsr=session["user"], posts=postList, postLen=len(postList))
