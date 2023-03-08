@@ -4,7 +4,7 @@ import libs.schemas as schemas
 import libs.db_func as db_func
 from datetime import date
 from bson.objectid import ObjectId
-from libs.globals import user_collection, post_collection, default
+from libs.globals import user_collection, post_collection, default, follow_collection
 from pymongo.errors import OperationFailure
 
 
@@ -40,9 +40,6 @@ def userHome(usr):
             return render_template("profilePage.html", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"], usr=usr)
     else:
         return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList), currentUsr=default)
-@content_bp.route("/profile/logout/<usr>")
-def profilelogout(usr):
-    return redirect(url_for("auth.logout_r", usr=usr))
     
 @content_bp.route("/profile/create-post/<usr>", methods=["POST", "GET"])
 def newpost(usr):
@@ -185,12 +182,19 @@ def archive(usr):
 @content_bp.route("/feed/<currentUsr>")
 def feed(currentUsr):
     if "user" in session:
-        return render_template("feed.html", currentUser=session["user"])
+        following = follow_collection.find({"Username": session["user"]})
+        followingList = []
+        for user in following:
+            followingList.append(user["Following"])
+        print(followingList)
+        postList = []
+        for user in followingList:
+            userPosts = post_collection.find({"Author": user})
+            for post in userPosts:
+                postList.append(post)
+        postList = postList[::-1]
+        print(postList)
+        return render_template("feed.html", currentUsr=session["user"], posts=postList, postLen=len(postList))
+
     else:
         return redirect(url_for("auth.login", usr=default, currentUsr=default))
-@content_bp.route("/feed")
-def feed_redirect():
-    return redirect(url_for("content.feed", currentUsr=session["user"]))
-@content_bp.route("/profile/feed")
-def feed_profile():
-    return redirect(url_for("content.feed", currentUsr=session["user"]))

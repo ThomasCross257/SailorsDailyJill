@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     {% extends 'base.html' %}
-    {% block title %}New Post{% endblock %}
+    {% block title %}{{ title }}{% endblock %}
 </head>
 <body class="bg-dark text-white">
     <div class="container"> 
@@ -11,7 +11,7 @@
         {% endblock %}
         {% block content %}
         <div class="jumbotron bg-secondary text-white"><h1>{{ title }}</h1></div>
-        <h3 class="text-white userLink">Author: <a href="#">{{ author }}</a></h3>
+        <h3 class="text-white userLink">Author: <a href="/content/profile/{{ author }}">{{ author }}</a></h3>
         <h3 class="text-white">Date: {{ date }}</h3>
         <h6 class="text-white">Tags: {{ tags }}</h6>
         <p class="text-white">{{ content }}</p>

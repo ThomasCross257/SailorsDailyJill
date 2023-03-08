@@ -13,7 +13,7 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(content_bp)
 app.register_blueprint(error_bp)
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def home():
     if "user" in session:
         user = session["user"]

@@ -9,23 +9,23 @@
             </li>
             {% if currentUsr == None %}
             <li class="nav-item">
-                <a class="nav-link" href="login">Login</a>
+                <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
             </li>
             {% endif %}
             {% if currentUsr != None %}
             <li class="nav-item">
-                <a class="nav-link" href="/{{ currentUsr }}/logout/">Logout</a>
+                <a class="nav-link" href="{{ url_for('auth.logout_r', usr=session['user']) }}">Logout</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="feed">Feed</a>
+                <a class="nav-link" href="{{ url_for('content.feed', currentUsr=session['user']) }}">Feed</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="search/{{ currentUsr }}">Search</a>
+                <a class="nav-link" href="{{ url_for('content.search', usr=session['user']) }}">Search</a>
             </li>
             {% endif %}
             {% if currentUsr == "admin" %}
             <li class="nav-item">
-                <a class="nav-link" href="/admin/database/{{ currentUsr }}">Database</a>
+                <a class="nav-link" href="{{ url_for('admin.database', usr=session['user']) }}">Database</a>
             </li>
             {% endif %}
         </ul>

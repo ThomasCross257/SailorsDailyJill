@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     {% extends 'base.html' %}
-    {% block title %} {{ currentUser }}'s' Feed{% endblock %}
+    {% block title %} {{ currentUsr }}'s' Feed{% endblock %}
 </head>
 <body>
   {% block navbar %}
@@ -12,15 +12,22 @@
     <div class="container">
         <div class="row">
         <div class="col-4">
-            <div class="card bg-success">
-            <div class="card-body">
-                <h5 class="card-title text-white">Card title</h5>
-                <h6 class="card-subtitle mb-2 text-white">Card subtitle</h6>
-                <p class="card-text text-white">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="card-link text-white">Card link</a>
-                <a href="#" class="card-link text-white">Another link</a>
-            </div>
-            </div>
+            {% if postLen > 0 %}
+                {% for post in posts %}
+                <div class="card bg-success">
+                <div class="card-body">
+                    <h4 class="card-title text-white">{{ post.Title }}</h4>
+                    <h5 class="card-subtitle mb-2 text-white">{{ post.Author }}</h5>
+                    <h6 class="card-subtitle mb-2 text-white">{{ post.Date }}</h6>
+                    <p class="card-text text-white">{{ post.Tags }}</p>
+                    <a href="{{ url_for('content.viewpost', post_id=post.id, usr=post.Author, currentUsr=session['user']) }}" class="card-link text-white">Click to view</a>
+                </div>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="container">
+            <h1 class="text-white text-center">Your feed is empty! Follow some people and it'll fill up!</h1>
+            {% endif %}               
         </div>
         </div>
     {% endblock %}
