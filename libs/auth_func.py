@@ -5,7 +5,7 @@ import re
 import dns.resolver
 import secrets
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, ValidationError
 from wtforms.validators import DataRequired, Email, Length
 
 class LoginForm(FlaskForm):
@@ -49,7 +49,7 @@ def registerAccount(username, email, password, passwordConf):
         return "Error: Required field(s) missing"
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     hashed_verify = bcrypt.hashpw(passwordConf.encode('utf-8'), bcrypt.gensalt())
-    if bcrypt.checkpw(hashed_password, hashed_verify) == False:
+    if bcrypt.checkpw(hashed_password, hashed_verify) == False and  password != passwordConf:
         return "Error: Passwords do not match"
     if not is_valid_email(email):
         return "Error: Invalid email address"
@@ -64,3 +64,16 @@ def registerAccount(username, email, password, passwordConf):
 def secretCreate():
     session_secret = secrets.token_hex(16)
     return session_secret
+
+def password_complexity(form, field):
+    password = field.data
+    if len(password) < 8:
+        raise ValidationError('Password must be at least 8 characters long')
+    if not any(c.isupper() for c in password):
+        raise ValidationError('Password must contain at least one uppercase letter')
+    if not any(c.islower() for c in password):
+        raise ValidationError('Password must contain at least one lowercase letter')
+    if not any(c.isdigit() for c in password):
+        raise ValidationError('Password must contain at least one digit')
+    if not any(c in "!@#$%^&*()_+-=[]{};:,./<>?" for c in password):
+        raise ValidationError('Password must contain at least one special character')

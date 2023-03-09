@@ -18,8 +18,8 @@
             <div class="col-md-6 mx-auto">
                 <form action="#" method="post">
                     {{ form.csrf_token }}
-                    {{ form.email.label }} {{ form.email() }}
-                    {{ form.password.label }} {{ form.password() }}
+                    <label for="signup_email"><h2 class="text-white">{{ form.username.label }} {{ form.username() }}</h2></label>
+                    <label for="signup_email"><h2 class="text-white">{{ form.password.label }} {{ form.password() }}</h2></label>
                     <button class="btn btn-primary" type="submit">Sign In</button>
                     <br><br>
                     <p class="text-white"><input type="checkbox" name="remember_me" value="1"> Remember me</p>

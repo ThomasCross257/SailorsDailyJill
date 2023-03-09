@@ -4,9 +4,13 @@ from flask import Blueprint, redirect, render_template, request, session, url_fo
 import bcrypt
 import libs.auth_func as auth_func
 from libs.globals import user_collection, default
-from app import csrf
+from flask_wtf.csrf import validate_csrf, ValidationError
+from app import app
+
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
+
+from flask_wtf.csrf import validate_csrf
 
 @auth_bp.route('/login', methods=['POST', 'GET'])
 def login():
@@ -14,8 +18,12 @@ def login():
     if request.method == 'POST':
         remember = True if request.form.get('remember') else False
         if form.validate_on_submit():
-            if not csrf.validate_csrf(form.csrf_token.data):
+            # Validate the CSRF token
+            try:
+                validate_csrf(form.csrf_token.data, app.secret_key)
+            except ValidationError:
                 abort(400, 'Invalid CSRF token')
+            # Verify the user's login information
             user = form.username.data
             password = form.password.data
             user_data = user_collection.find_one({'Username': user})
@@ -24,26 +32,37 @@ def login():
                 if remember:
                     session.permanent = True
                 return redirect(url_for('content.userHome', usr=user, currentUsr=session["user"]))
+            else:
+                return redirect(url_for('login', usr=default, currentUsr=default, error='Invalid Login Information.'))
         else:
             return redirect(url_for('login', usr=default, currentUsr=default, error='Invalid Login Information.'))
     else:
         return render_template('login.html', usr=default, currentUsr=default, form=form)
 
+
 @auth_bp.route('/signup', methods=['POST', 'GET'])
 def signup():
+    form = auth_func.RegisterForm()
     if request.method == 'POST':
-        user = request.form['signup_user']
-        password = request.form['signup_password']
-        verify_password = request.form['signup_passwordVal']
-        email = request.form['signup_email']
-        registrationResult = auth_func.registerAccount(user, email, password, verify_password)
-        if  "Error" in registrationResult:
-            return redirect(url_for('signup', usr=default, currentUsr=default, error=registrationResult))
-        else: 
-            session['user'] = user
-            return redirect(url_for('content.userHome', usr=user, currentUsr=session["user"]))
+        if form.validate_on_submit():
+            # Validate the CSRF token
+            try:
+                validate_csrf(form.csrf_token.data, app.secret_key)
+            except ValidationError:
+                abort(400, 'Invalid CSRF token')
+            # Verify the user's login information
+            user = form.username.data
+            password = form.password.data
+            email = form.email.data
+            passwordConf = form.passwordConf.data
+            registerResult = auth_func.registerAccount(user, email, password, passwordConf)
+            if "Success" in registerResult:
+                session["user"] = user
+                return redirect(url_for('content.userHome', usr=user, currentUsr=session["user"]))
+            else:
+                return redirect(url_for('signup', usr=default, currentUsr=default, error=registerResult))
     else:
-        return render_template('signup.html', usr=default, currentUsr=default)
+        return render_template('signup.html', usr=default, currentUsr=default, form=form)
 
 @auth_bp.route("/logout/<usr>")
 def logout_r(usr):

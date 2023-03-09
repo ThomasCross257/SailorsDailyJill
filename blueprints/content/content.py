@@ -13,7 +13,6 @@ content_bp = Blueprint('content', __name__, template_folder='templates', url_pre
 
 todaysDate = date.today().strftime("%m/%d/%y")
 
-
 @content_bp.route("/profile/<usr>", methods=["GET", "POST"])
 def userHome(usr):
     userPage = user_collection.find_one({"Username": usr})
