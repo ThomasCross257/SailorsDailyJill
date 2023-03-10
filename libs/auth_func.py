@@ -4,19 +4,7 @@ from libs.globals import user_collection
 import re
 import dns.resolver
 import secrets
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, ValidationError
-from wtforms.validators import DataRequired, Email, Length
-
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=20)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=80)])
-class RegisterForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=20)])
-    email = StringField('Email Address', validators=[DataRequired(), Email(message='Invalid email'), Length(max=50)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=80)])
-    passwordConf = PasswordField('Confirm Password', validators=[DataRequired(), Length(min=8, max=80)])
-
+from wtforms import ValidationError
 
 def usernameExists(username, collection):
     if collection.find_one({"Username": username}) is not None:

@@ -11,17 +11,18 @@
         {% endblock %}
         {% block content %}
         <form action="#" method="post">
+            {{ form.csrf_token }}
             <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" class="form-control" name="title" placeholder="Enter title" required>
+                <label for="title" class="text-white">Title</label>
+                {{ form.title(class="form-control", placeholder="Enter title", required=True) }}
             </div>
             <div class="form-group">
-                <label for="tags">Tags</label>
-                <input type="text" class="form-control" name="tags" placeholder="Enter tags (comma separated)" required>
+                <label for="tags" class="text-white">Tags</label>
+                {{ form.tags(class="form-control", placeholder="Enter tags (comma separated)", required=True) }}
             </div>
             <div class="form-group">
-                <label for="content">Content</label>
-                <textarea class="form-control" name="content" rows="3"></textarea>
+                <label for="content" class="text-white">Content</label>
+                {{ form.content(class="form-control", required=True) }}
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

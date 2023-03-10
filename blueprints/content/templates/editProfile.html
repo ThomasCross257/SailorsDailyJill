@@ -12,23 +12,25 @@
         {% block content %}
         <div class="row">
             <div class="container">
-            <form method = "post">
-                <label for = "username" class="text-light">Username</label>
-                <input type="text" class="form-control" id="username" name="username">
-                <label for = "email" class="text-light">Email</label>
-                <input type="email" class="form-control" id="email" name="email">
-                <label for = "bio" class="text-light">Bio</label>
-                <textarea class="form-control" id="bio" name="bio" rows="3"></textarea>
-                <label for = "password" class="text-light">Password</label>
-                <input type="password" class="form-control" name="password">
-                <label for = "confirmPassword" class="text-light">Confirm Password</label>
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                <input type = "file" name = "profilePic" id = "profilePic">
-                <br>
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type = "none" class="btn btn-danger">Delete Account</button>
-            </form>
-        </div>
+                <form method="post" enctype="multipart/form-data">
+                    {{ form.csrf_token }}
+                    <label for="username" class="text-light">Username</label>
+                    {{ form.username(class="form-control", id="username") }}
+                    <label for="email" class="text-light">Email</label>
+                    {{ form.email(class="form-control", id="email") }}
+                    <label for="bio" class="text-light">Bio</label>
+                    {{ form.bio(class="form-control", id="bio") }}
+                    <label for="password" class="text-light">Password</label>
+                    {{ form.password(class="form-control", id="password") }}
+                    <label for="confirmPassword" class="text-light">Confirm Password</label>
+                    {{ form.passwordConf(class="form-control", id="confirmPassword") }}
+                    {{ form.profilePic(id="profilePic") }}
+                    <br>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="none" class="btn btn-danger">Delete Account</button>
+                </form>
+            </div>
+        </div>        
         {% endblock %}
     </div>
 </body>

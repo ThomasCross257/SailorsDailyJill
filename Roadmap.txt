@@ -20,11 +20,21 @@ Complete:
         Feed Functionality: Allows users to see content from people that they follow.
 In Progress:
     Profile images(?): Need server/service where I can host them. (Might be done in docker)
-    Profile image structure: /
+    Secured forms: CSRF tokens and other security measures.
+        Completed Tokens:
+            Login
+            Register
+            Edit Profile
+            New post
+        Needed:
+            Admin Dashboard
+            Delete Account
+            Delete Post
+            Edit Post
+            Anything else that could be hacked.
     Nginx Integration: Need to integrate nginx into the docker container.
-    Website security: SSL, HTTPS, etc.
+Not started:
     Verification methods for new users: Email 2FA, Google 2FA, etc.
-
     Kubernetes Integration: Likely begin in late march.
     Website redesign: New color scheme, new layout, new everything.
     Kubernetes Testing: Testing the website on a kubernetes cluster.

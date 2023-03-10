@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, request, session, url_for, flash
+from flask import Blueprint, redirect, render_template, request, session, url_for, flash, abort
 import bcrypt
 import libs.schemas as schemas
 import libs.auth_func as au_func
@@ -7,7 +7,9 @@ from datetime import date
 from bson.objectid import ObjectId
 from libs.globals import user_collection, post_collection, default, follow_collection
 from pymongo.errors import OperationFailure
-
+from app import app
+from flask_wtf.csrf import validate_csrf, ValidationError
+from libs.forms import BlogForm, EditProfileForm, SearchForm
 
 content_bp = Blueprint('content', __name__, template_folder='templates', url_prefix="/content")
 
@@ -43,29 +45,26 @@ def userHome(usr):
     
 @content_bp.route("/profile/create-post/<usr>", methods=["POST", "GET"])
 def newpost(usr):
+    form = BlogForm()
     if request.method == "POST":
-        title = request.form["title"]
-        content = request.form["content"]
-        tags = request.form["tags"]
-        author = usr
-        date = todaysDate
-        post_id = cl_func.generate_post_id()
-        new_post = {
-        '_id' : post_id,
-        "Title" : title,
-        "Content" : content,
-        "Author" : author,
-        "Date" : date,
-        "Tags" : tags
-        }
-        schemas.newPost(title, content, author, todaysDate, tags, post_id)
-        if cl_func.tagsValid(tags) == False:
-            return redirect(url_for("content.newpost", usr=usr, error="Invalid tags.", currentUsr=session["user"]))
-        post_collection.insert_one(new_post)
-        return redirect(url_for("content.viewpost", post_id=post_id, usr=usr, currentUsr=session["user"]))
+        if form.validate_on_submit():
+            try:
+                validate_csrf(form.csrf_token.data, app.secret_key)
+            except ValidationError:
+                abort(400, 'Invalid CSRF token')
+            title = form.title.data
+            content = form.content.data
+            tags = form.tags.data
+            author = usr
+            post_id = cl_func.generate_post_id()
+            new_post = schemas.newPost(title, content, author, todaysDate, tags, post_id)
+            if cl_func.tagsValid(tags) == False:
+                return redirect(url_for("content.newpost", usr=usr, error="Invalid tags.", currentUsr=session["user"]))
+            post_collection.insert_one(new_post)
+            return redirect(url_for("content.viewpost", post_id=post_id, usr=usr, currentUsr=session["user"]))
     else:
         if "user" in session:
-            return render_template("newPost.html", usr=usr, currentUser=session["user"])
+            return render_template("newPost.html", usr=usr, currentUser=session["user"], form=form)
         else:
             return redirect(url_for("auth.login", usr=default))
 
