@@ -35,6 +35,13 @@
             <div class="col-md-4">
                 <div class="card bg-secondary">
                     <div class="card-body">
+                        {% if userPage.ProfilePic %}
+                            <img src="{{ userPage.ProfilePic }}" class="card-img-top" alt="Profile Picture">
+                        {% else %}
+                            <img src="/static/img/default.jpg" class="card-img-top" alt="Profile Picture">
+                        {% endif %}
+                        <br>
+                        <br>
                         <h5 class="card-title text-white">{{ userPage.Username }}</h5>
                         <p class="card-text text-white">{{ userPage.Biography }}</p>
                     </div>

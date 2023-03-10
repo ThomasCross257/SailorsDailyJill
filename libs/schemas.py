@@ -4,7 +4,8 @@ def newUser(user, password, email, adminPermission, biography):
         "Password" : password,
         "Email address" : email,
         "Admin" : adminPermission,
-        "Biography" : biography
+        "Biography" : biography,
+        "Profile URL": "/static/img/default.jpg",
     }
     return new_user
 def newPost(title, content, author, date, tags, post_id):
