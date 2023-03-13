@@ -14,31 +14,27 @@
             <div class="container">
             <a href="{{ url_for('admin.database', usr=session['user']) }}"><button id="Return" class="btn btn-secondary m-2">Back to DB</button></a>
             <form class="bg-secondary p-3" action="{{ url_for('admin.newEntry', usr=session['user']) }}" method="POST">    
+                {{ form.csrf_token }}
                 <div class="form-group mt-2">
                     <label for="db_Username"><h2 class="text-white">Username:</h2></label>
-                    <input id="db_Username" name="username" class="form-control" type="text" placeholder="Username" required>
+                    {{ form.username(class="form-control", placeholder="Username", required="required") }}
                 </div>
                 <div class="form-group">
                     <label for="db_Email"><h2 class="text-white">Email:</h2></label>
-                    <input id="db_Email" name="email" class="form-control" type="text" placeholder="Email" required>
+                    {{ form.email(class="form-control", placeholder="Email", required="required") }}
                 </div>
                 <div class="form-group">
                     <label for="db_Pass"><h2 class="text-white">Password:</h2></label>
-                    <input id="db_Pass" name="password" class="form-control" type="password" placeholder="Password" required>
+                    {{ form.password(class="form-control", placeholder="Password", required="required") }}
                 </div>
                 <div class="form-group">
                     <label for="db_Pass-conf"><h2 class="text-white">Confirm Password:</h2></label>
-                    <input id="db_Pass-conf" name="passwordConf" class="form-control" type="password" placeholder="Password" required>
+                    {{ form.passwordConf(class="form-control", placeholder="Confirm Password", required="required") }}
                 </div>
                 <div class="form-group">
-                    <label for="db_admincheck"><h2 class="text-white">Admin:</h2></label>
-                    <select class="form-select" name="admin">
-                        <option selected>Open this Menu</option>
-                        <option value="True">True</option>
-                        <option value="False">False</option>
-                    </select>
-                </div>
-
+                    <label class="control-label" for="admin">Admin</label>
+                    {{ form.admin(class="text-white") }}
+                </div>                
                 <button id="Submit" class="btn btn-primary">Submit</button>
                 <h2 class="text-white">{{ error }}</h2>
             </div>

@@ -35,8 +35,9 @@
             <div class="col-md-4">
                 <div class="card bg-secondary">
                     <div class="card-body">
-                        {% if userPage.ProfilePic %}
-                            <img src="{{ userPage.ProfilePic }}" class="card-img-top" alt="Profile Picture">
+                        {% if userPage['Profile Picture'] %}
+                            <img src="{{ url_for('content.uploaded_pfp', filename='pfp-admin.jpg', userid=userPage._id) }}" class="card-img-top" alt="Profile Picture">
+                            <p>{{ url_for('content.uploaded_pfp', filename='pfp-admin.jpg', userid=userPage._id) }}</p>
                         {% else %}
                             <img src="/static/img/default.jpg" class="card-img-top" alt="Profile Picture">
                         {% endif %}

@@ -26,6 +26,7 @@ In Progress:
             Register
             Edit Profile
             New post
+            Search
         Needed:
             Admin Dashboard
             Delete Account

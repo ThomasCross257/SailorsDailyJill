@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     {% extends 'base.html' %}
-    {% block title %}Edit Profile{% endblock %}
+    {% block title %}Edit {{user.Username}}{% endblock %}
 </head>
 <body class="bg-dark">
     <div class="container">
@@ -10,27 +10,64 @@
         {% include 'navbar.html' %}
         {% endblock %}
         {% block content %}
-        <div class="row">
-            <div class="container">
-                <form method="post" enctype="multipart/form-data">
-                    {{ form.csrf_token }}
-                    <label for="username" class="text-light">Username</label>
-                    {{ form.username(class="form-control", id="username") }}
-                    <label for="email" class="text-light">Email</label>
-                    {{ form.email(class="form-control", id="email") }}
-                    <label for="bio" class="text-light">Bio</label>
-                    {{ form.bio(class="form-control", id="bio") }}
-                    <label for="password" class="text-light">Password</label>
-                    {{ form.password(class="form-control", id="password") }}
-                    <label for="confirmPassword" class="text-light">Confirm Password</label>
-                    {{ form.passwordConf(class="form-control", id="confirmPassword") }}
-                    {{ form.profilePic(id="profilePic") }}
-                    <br>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="none" class="btn btn-danger">Delete Account</button>
-                </form>
+        {% with messages = get_flashed_messages() %}
+ 
+        {% if messages %}
+
+        {% for message in messages %}
+           <div class="alert alert-success alert-dismissable" role="alert">
+                {{message}}
             </div>
-        </div>        
+        {% endfor  %}
+
+        {% endif %}
+
+        {% endwith %}
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card bg-secondary">
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data" action="{{ url_for('content.editProfile', usr=usr) }}">
+                            {{ form.csrf_token }}
+                            <div class="form-group">
+                                <label for="username" class="text-white">Username:</label>
+                                {{ form.username(class="form-control", id="username", placeholder=user['Username']) }}
+                            </div>
+                            <div class="form-group">
+                                <label for="bio" class="text-white">Biography:</label>
+                                {{ form.bio(class="form-control", id="bio", placeholder=user['Biography']) }}
+                            </div>
+                            <div class="form-group">
+                                <label for="passwordConf" class="text-white">Confirm Password:</label>
+                                {{ form.passwordConf(class="form-control", id="passwordConf") }}
+                            </div>
+                            <div class="form-group">
+                                <label for="profilePic" class="text-white">Profile Picture:</label>
+                                {{ form.profilePic(class="form-control-file", id="profilePic") }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <a href="/" class="btn btn-danger">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+                <div class="card mt-3 bg-secondary">
+                    <div class="card-body bg-secondary">
+                        <h5 class="card-title bg-secondary text-white">Recent Posts</h5>
+                        <ul class="list-group list-group-flush bg-secondary">
+                            <li class="list-group-item bg-secondary"><a href="#" class="link-light">Example</a></li>
+                            <li class="list-group-item bg-secondary"><a href="#" class="link-light">Example</a></li>
+                            <li class="list-group-item bg-secondary"><a href="#" class="link-light">Example</a></li>
+                            <li class="list-group-item bg-secondary"><a href="#" class="link-light">Example</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h1 class="mb-4 text-white" >{{ user.Username }}</h1>
+                
+                
+            </div>
+        </div>
         {% endblock %}
     </div>
 </body>

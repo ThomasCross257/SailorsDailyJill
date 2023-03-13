@@ -2,6 +2,10 @@ from flask import Blueprint, render_template
 
 error_bp = Blueprint('errors', __name__, template_folder='templates')
 
+@error_bp.errorhandler(400)
+def bad_request(error):
+    return render_template('400.html'), 400
+
 @error_bp.errorhandler(403)
 def internal_error(error):
     return render_template('403.html'), 403

@@ -16,12 +16,13 @@
                         <div class="form-group">
                             <h1 class="formtext-center text-light">Search</h1>
                             <div class="col-md-4 col-lg-4 col-xl-4">
-                                <div class="input-group">
-                                    <input id="db_Search" name="search" class="form-control" type="text" placeholder="Search">
-                                    <div class="input-group-append">
-                                        <button id="SearchBtn" class="btn btn-primary" onclick="javascript:void(0);">Search</button>
-                                    </div>
-                                </div>
+                            <div class="input-group">
+                            {{ form.csrf_token }}
+                            {{ form.search(class="form-control") }}}
+                            <div class="input-group-append">
+                                <button id="SearchBtn" class="btn btn-primary" onclick="javascript:void(0);">Search</button>
+                            </div>
+                            </div>
                         </div>
                     </form>
                     {% if search %}

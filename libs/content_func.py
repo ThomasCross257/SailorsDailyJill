@@ -5,6 +5,24 @@ from libs.schemas import followList
 import bcrypt
 from libs.auth_func import is_valid_email
 
+def validUsernameLen(username):
+    if len(username) >= 4 and len(username) <= 20:
+        return True
+    return False
+
+def validPasswordLen(password):
+    if len(password) >= 8 and len(password) <= 32:
+        return True
+    return False
+
+def validBioLen(bio):
+    if len(bio) <= 500:
+        return True
+    return False
+def validImage(img):
+    if img.endswith(".jpg") or img.endswith(".png") or img.endswith(".jpeg"):
+        return True
+    return False
 def createFollowSchema(user):
     if follow_collection.find_one({"Username": user}) is None:
         new_follow = followList(user, [], [])
@@ -90,3 +108,23 @@ def profileUpdate(newUsername, newEmail, newPassword, verifyPassword, usr, newBi
             collection.update_one({"Username": usr}, {"$set": {"Email address": newEmail}})
             collection.update_one({"Username": usr}, {"$set": {"Username": newUsername}})
             return "Success!"
+
+def validateImage(imageForm):
+    if imageForm.files["file"].filename == "":
+        return False
+    if not imageForm.files["file"].filename.endswith(".png", ".jpg", ".jpeg"):
+        return "Error: File must be a valid image file."
+    return True
+
+def form_has_changes(form, user):
+    # Check if any field is blank
+    if any(not field.data for field in form if field.name != 'profilePic'):
+        return True
+    # Check if any field has changed
+    if (
+        form.username.data != user["Username"] or
+        form.bio.data != user["Biography"]
+    ):
+        return True
+    else:
+        return False

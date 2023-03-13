@@ -13,8 +13,9 @@
         <div class="container">
             <h1 class="text-white"> Are you sure you want to delete {{ usrDelete }}?</h1>
             <form method="post">
-                <input type="submit" name="delete" value="Yes" class="btn btn-danger">
-                <input type="submit" name="cancel" value="No" class="btn btn-success">
+                {{ form.csrf_token }}
+                {{ form.deleteUser(class="btn btn-danger", name="delete") }}
+                {{ form.cancelDelete(class="btn btn-success", name="cancel") }}
             </form>
         </div>
         </form>

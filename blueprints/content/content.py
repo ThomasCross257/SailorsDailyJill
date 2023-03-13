@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, request, session, url_for, flash, abort
+from flask import Blueprint, redirect, render_template, request, session, url_for, flash, abort, send_from_directory
 import bcrypt
 import libs.schemas as schemas
 import libs.auth_func as au_func
@@ -10,6 +10,8 @@ from pymongo.errors import OperationFailure
 from app import app
 from flask_wtf.csrf import validate_csrf, ValidationError
 from libs.forms import BlogForm, EditProfileForm, SearchForm
+from werkzeug.utils import secure_filename
+import os
 
 content_bp = Blueprint('content', __name__, template_folder='templates', url_prefix="/content")
 
@@ -51,7 +53,7 @@ def newpost(usr):
             try:
                 validate_csrf(form.csrf_token.data, app.secret_key)
             except ValidationError:
-                abort(400, 'Invalid CSRF token')
+                redirect (url_for("errors.errorhandler(400)", usr=usr, currentUsr=session["user"]))
             title = form.title.data
             content = form.content.data
             tags = form.tags.data
@@ -71,46 +73,55 @@ def newpost(usr):
 @content_bp.route("/profile/edit-profile/<usr>", methods=["POST", "GET"])
 def editProfile(usr):
     user = user_collection.find_one({'Username': usr})
+    form = EditProfileForm()
     if request.method == "POST":
-        newBio = request.form["bio"]
-        newUsername = request.form["username"]
-        newPassword = request.form["password"]
-        passwordVerify = request.form["confirmPassword"]
-        newEmail = request.form["email"]
-        profilePic = request.form["profilePic"]
-        if newUsername:
-            if au_func.usernameExists(newUsername, user_collection) == True:
-                return redirect(url_for("editProfile", usr=usr, error="Username already exists."))
-            elif newUsername == usr:
-                return redirect(url_for("editProfile", usr=usr, error="Username is the same as the current one."))
-            else:
-                user_collection.update_one({'_id': ObjectId(user["_id"])}, {'$set': {'Username': newUsername}})
+        if form.validate_on_submit():
+            try:
+                validate_csrf(form.csrf_token.data, app.secret_key)
+            except ValidationError:
+                abort(400, 'Invalid CSRF token')
 
-        if newBio:
-            user_collection.update_one({'_id': ObjectId(user["_id"])}, {'$set': {'Biography': newBio}})
+            # check if user has entered a new username and if it is not already taken
+            if form.username.data and form.username.data != user["Username"] and cl_func.validUsernameLen(form.username.data):
+                if user_collection.find_one({"Username": form.username.data}) is not None:
+                    flash("Username already exists.", "error")
+                    return redirect(url_for("content.editProfile", usr=usr))
+                else:
+                    user["Username"] = form.username.data
 
-        if newPassword and passwordVerify:
-            if newUsername == newPassword:
-                hashed_password = bcrypt.hashpw(newPassword.encode('utf-8'), bcrypt.gensalt())
-                user_collection.update_one({'_id': ObjectId(user.get_id())}, {'$set': {'Password': hashed_password}})
+            # check if user has entered a new bio
+            if form.bio.data and form.bio.data != user["Biography"] and cl_func.validBioLen(form.bio.data):
+                user["Biography"] = form.bio.data
+
+            # check if user has uploaded a new profile picture
+            if form.profilePic.raw_data:
+                # save the uploaded file to the server
+                filename = secure_filename(form.profilePic.data.filename)
+                basename, extension = os.path.splitext(filename)
+                basename = "pfp"
+                filename = f"{basename}-{user['Username']}{extension}"
+                file_path = os.path.join(app.root_path, 'uploads', str(user["_id"]),'profile', filename)
+                if not os.path.exists(os.path.dirname(file_path)):
+                    os.makedirs(os.path.dirname(file_path))
+                form.profilePic.data.save(file_path)    
+                # update the user's profile picture in the database
+                user["Profile Picture"] = url_for("content.uploaded_pfp", filename=filename, userid=str(user["_id"]))
+
+            # check if user has entered a password to confirm changes
+            if form.passwordConf.data:
+                if bcrypt.checkpw(form.passwordConf.data.encode('utf-8'), user["Password"]):
+                    user_collection.update_one({"_id": user["_id"]}, {"$set": user})
+                    flash("Profile updated successfully!", "success")
+                    return redirect(url_for("content.userHome", usr=user["Username"]))
+                else:
+                    flash("Passwords do not match.", "error")
+                    return redirect(url_for("content.editProfile", usr=usr))
             else:
-                return redirect (url_for("content.editProfile", usr=usr, error="Passwords do not match."))
-        if newEmail:
-            if au_func.is_valid_email(newEmail) == False:
-                return redirect(url_for("content.editProfile", usr=usr, error="Not a valid Email address."));
-            else:
-                user_collection.update_one({'_id': ObjectId(user["_id"])}, {'$set': {'Email address': newEmail}})
-        return redirect(url_for("content.userHome", usr=usr))
-        
-    else:
-        if "user" in session and usr == session["user"]:
-            return render_template("editProfile.html", usr=usr, currentUsr=session["user"])
-        else:
-            return redirect(url_for("login", usr=default, currentUsr=default))
-@content_bp.route("/edit-profile")
-def editRedirect():
-    usr=session["user"]
-    return redirect(url_for("editProfile", usr=usr))
+                flash("Please enter your password to confirm changes.", "error")
+                return redirect(url_for("content.editProfile", usr=usr))
+    return render_template("editProfile.html", form=form, usr=usr, user=user)
+
+
 
 @content_bp.route("/post/<post_id>/=<usr>")
 def viewpost(post_id, usr):
@@ -127,43 +138,27 @@ def viewpost(post_id, usr):
         return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, currentUser=session["user"])
     else:
         return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, currentUser=default)
-@content_bp.route("/post/logout")
-def post_logout():
-    return redirect(url_for("content.logout_r", usr=session["user"]))
-
-@content_bp.route("/<usr>/post/<post_id>")
-def post_usrpage(usr, post_id):
-    return redirect(url_for("content.viewpost", post_id=post_id, usr=usr, currentUser=session["user"]))
-@content_bp.route("/post/<post_id>/<usr>")
-def post_author(post_id, usr):
-    return redirect(url_for("content.userHome", usr=usr, currentUser=session["user"]))
-
-@content_bp.route("/profile/<usr>/post/<post_id>")
-def post_archive(usr, post_id):
-    return redirect(url_for("content.viewpost", post_id=post_id, usr=usr, currentUser=session["user"]))
 
 @content_bp.route("/search/<usr>", methods=["POST", "GET"])
 def search(usr):
-    if request.method == "POST":
-        search = request.form["search"]
+    form = SearchForm()
+    if request.method == "POST" and form.validate_on_submit():
+        try:
+            validate_csrf(form.csrf_token.data, app.secret_key)
+        except ValidationError:
+            abort(400, 'Invalid CSRF token')
+        search = form.search.data
         if cl_func.searchValid(search) == False:
-            return redirect(url_for("content.search", usr=usr, error="Invalid search.", currentUser=session["user"], search=None))
+            return redirect(url_for("content.search", usr=usr, error="Invalid search.", currentUser=session["user"], search=None, form=form))
         else:
             search = cl_func.searchPosts(search)
-            print(search)
             search = search[::-1]
-            return render_template("search.html", usr=usr, currentUser=session["user"], search=search)
+            return render_template("search.html", usr=usr, currentUser=session["user"], search=search, form=form)
     else:
         if "user" in session:
-            return render_template("search.html", usr=usr, currentUser=session["user"], search=None)
+            return render_template("search.html", usr=usr, currentUser=session["user"], search=None, form=form)
         else:
             return redirect(url_for("auth.login", usr=default, currentUsr=default))
-@content_bp.route("/profile/search/<usr>")
-def search_profile(usr):
-    return redirect(url_for("content.search", usr=usr, currentUser=session["user"]))
-@content_bp.route("/search/search")
-def doubleSearch(usr):
-    return redirect(url_for("content.search", usr=usr, currentUser=session["user"]))
 
 @content_bp.route("/profile/<usr>/archive")
 def archive(usr):
@@ -196,3 +191,11 @@ def feed(currentUsr):
 
     else:
         return redirect(url_for("auth.login", usr=default, currentUsr=default))
+    
+@content_bp.route("/uploads/<userid>/<filename>")
+def uploaded_file(userid, filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@content_bp.route("/uploads/<userid>/pfp/<filename>")
+def uploaded_pfp(userid, filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)

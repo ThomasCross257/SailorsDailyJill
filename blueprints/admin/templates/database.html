@@ -17,9 +17,10 @@
             <div class="col-md-4 col-lg-4 col-xl-4">
                 <form method="post" action="{{url_for('admin.searchEntry', usr=session['user'])}}">
                 <div class="input-group">
-                    <input id="db_Search" class="form-control" type="text" name="search" placeholder="Search">
+                    {{ form.csrf_token }}
+                    {{ form.search }}
                     <div class="input-group-append">
-                        <button id="SearchBtn" class="btn btn-secondary">Search</button>
+                        <button class="btn btn-primary" type="submit">Search</button>
                     </div>
                 </form>
                 </div>
@@ -34,6 +35,7 @@
                         <th class="text-white">ID</th>
                         <th class="text-white">Blog</th>
                         <th class="text-white">Edit</th>
+                        <th class ="text-white">Clear Following</th>
                         <th class="text-white">Delete</th>
                     </tr>
                 </thead>

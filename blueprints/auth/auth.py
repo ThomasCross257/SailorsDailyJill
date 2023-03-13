@@ -2,8 +2,9 @@
 
 from flask import Blueprint, redirect, render_template, request, session, url_for, flash, abort
 import bcrypt
-import libs.auth_func as auth_func
+import libs.forms as forms
 from libs.globals import user_collection, default
+import libs.auth_func as auth_func
 from flask_wtf.csrf import validate_csrf, ValidationError
 from app import app
 
@@ -14,9 +15,12 @@ from flask_wtf.csrf import validate_csrf
 
 @auth_bp.route('/login', methods=['POST', 'GET'])
 def login():
-    form = auth_func.LoginForm()
+    form = forms.LoginForm()
     if request.method == 'POST':
-        remember = True if request.form.get('remember') else False
+        if request.form.get('remember'):
+            remember = True 
+        else:
+            remember = False
         if form.validate_on_submit():
             # Validate the CSRF token
             try:
@@ -33,16 +37,16 @@ def login():
                     session.permanent = True
                 return redirect(url_for('content.userHome', usr=user, currentUsr=session["user"]))
             else:
-                return redirect(url_for('login', usr=default, currentUsr=default, error='Invalid Login Information.'))
+                return redirect(url_for('auth.login', usr=default, currentUsr=default, error='Invalid Login Information.'))
         else:
-            return redirect(url_for('login', usr=default, currentUsr=default, error='Invalid Login Information.'))
+            return redirect(url_for('auth.login', usr=default, currentUsr=default, error='Invalid Login Information.'))
     else:
         return render_template('login.html', usr=default, currentUsr=default, form=form)
 
 
 @auth_bp.route('/signup', methods=['POST', 'GET'])
 def signup():
-    form = auth_func.RegisterForm()
+    form = forms.RegisterForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             # Validate the CSRF token
@@ -60,9 +64,9 @@ def signup():
                 session["user"] = user
                 return redirect(url_for('content.userHome', usr=user, currentUsr=session["user"]))
             else:
-                return redirect(url_for('signup', usr=default, currentUsr=default, error=registerResult))
+                return redirect(url_for('auth.signup', usr=default, currentUsr=default, error=registerResult))
     else:
-        return render_template('signup.html', usr=default, currentUsr=default, form=form)
+        return render_template('auth.signup.html', usr=default, currentUsr=default, form=form)
 
 @auth_bp.route("/logout/<usr>")
 def logout_r(usr):
