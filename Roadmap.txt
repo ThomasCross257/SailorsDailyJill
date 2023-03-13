@@ -18,8 +18,8 @@ Complete:
         Search Functions:A simple search page that queries the database. (Likely to remove tags and instead just search by title, author or content.)
         Docker Migration: Migrating the website to a docker container.
         Feed Functionality: Allows users to see content from people that they follow.
+        Profile images(?): Need server/service where I can host them. (Might be done in docker)
 In Progress:
-    Profile images(?): Need server/service where I can host them. (Might be done in docker)
     Secured forms: CSRF tokens and other security measures.
         Completed Tokens:
             Login
@@ -27,12 +27,10 @@ In Progress:
             Edit Profile
             New post
             Search
-        Needed:
             Admin Dashboard
-            Delete Account
+        Needed:
             Delete Post
             Edit Post
-            Anything else that could be hacked.
     Nginx Integration: Need to integrate nginx into the docker container.
 Not started:
     Verification methods for new users: Email 2FA, Google 2FA, etc.

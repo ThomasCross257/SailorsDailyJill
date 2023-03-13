@@ -66,7 +66,7 @@ def signup():
             else:
                 return redirect(url_for('auth.signup', usr=default, currentUsr=default, error=registerResult))
     else:
-        return render_template('auth.signup.html', usr=default, currentUsr=default, form=form)
+        return render_template('signup.html', usr=default, currentUsr=default, form=form)
 
 @auth_bp.route("/logout/<usr>")
 def logout_r(usr):

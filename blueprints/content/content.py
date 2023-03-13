@@ -66,7 +66,7 @@ def newpost(usr):
             return redirect(url_for("content.viewpost", post_id=post_id, usr=usr, currentUsr=session["user"]))
     else:
         if "user" in session:
-            return render_template("newPost.html", usr=usr, currentUser=session["user"], form=form)
+            return render_template("makePost.html", usr=usr, currentUser=session["user"], form=form, editMode=False)
         else:
             return redirect(url_for("auth.login", usr=default))
 
@@ -135,9 +135,14 @@ def viewpost(post_id, usr):
     except OperationFailure:
         return render_template("404.html")
     if "user" in session:
-        return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, currentUser=session["user"])
+        return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, currentUser=session["user"], post_id=post_id)
     else:
         return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, currentUser=default)
+@content_bp.route("/post/<post_id>/edit=<usr>", methods=["POST", "GET"])
+def editpost(post_id, usr):
+    form = BlogForm()
+    post = post_collection.find_one({"_id": post_id})
+    return render_template("makePost.html", usr=usr, currentUser=session["user"], form=form, editMode=True, post_id=post_id, post=post)
 
 @content_bp.route("/search/<usr>", methods=["POST", "GET"])
 def search(usr):

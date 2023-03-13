@@ -52,7 +52,11 @@
                         <ul class="list-group list-group-flush bg-secondary">
                         {% if postLen > 0 %}    
                             {%for post in posts%}
-                            <li class="list-group-item bg-secondary"><a href="post/{{post._id}}" class="link-light">{{ post.Title }}</a></li>
+                            {% if currentUsr == None %}
+                            <li class="list-group-item bg-secondary"><a href="{{ url_for('content.viewpost', post_id=post._id, usr=default) }}" class="link-light">{{ post.Title }}</a></li>
+                            {% else %}
+                            <li class="list-group-item bg-secondary"><a href="{{ url_for('content.viewpost', post_id=post._id, usr=currentUsr) }}" class="link-light">{{ post.Title }}</a></li>
+                            {% endif %}
                             {%endfor%}
                         {% endif %}
                         {% if postLen == 0 %}

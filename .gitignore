@@ -3,4 +3,4 @@ __pycache__
 Dockerfile
 .vscode
 *.pyc
-uploads/*
+static/uploads/*

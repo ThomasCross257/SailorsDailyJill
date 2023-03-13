@@ -10,6 +10,7 @@
         {% include 'navbar.html' %}
         {% endblock %}
         {% block content %}
+        {% if editMode == False %}
         <form action="#" method="post">
             {{ form.csrf_token }}
             <div class="form-group">
@@ -26,6 +27,24 @@
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+        {% else %}
+        <form action="#" method="post">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                <label for="title" class="text-white">Title</label>
+                {{ form.title(class="form-control", placeholder="Enter title", required=True) }}
+            </div>
+            <div class="form-group">
+                <label for="tags" class="text-white">Tags</label>
+                {{ form.tags(class="form-control", placeholder="Enter tags (comma separated)", required=True) }}
+            </div>
+            <div class="form-group">
+                <label for="content" class="text-white">Content</label>
+                {{ form.content(class="form-control", required=True) }}
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        {% endif %}
         {% endblock %}
     </div>
 </body>
