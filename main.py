@@ -20,6 +20,10 @@ def home():
     else:
         return render_template("index.html", usr=default, currentUsr=default)
 
+@app.template_filter('to_string')
+def to_string(value):
+    return str(value)
+
 if __name__ == "__main__":
 
     app.run(debug=True)

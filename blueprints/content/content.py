@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, request, session, url_for, flash, abort, send_from_directory
+from flask import Blueprint, redirect, render_template, request, session, url_for, flash, abort, send_file
 import bcrypt
 import libs.schemas as schemas
 import libs.auth_func as au_func
@@ -191,11 +191,14 @@ def feed(currentUsr):
 
     else:
         return redirect(url_for("auth.login", usr=default, currentUsr=default))
-    
-@content_bp.route("/uploads/<userid>/<filename>")
+"""
+@app.route('/uploads/<userid>/pfp/<filename>')
 def uploaded_file(userid, filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], userid, 'pfp', filename)
+    return send_file(file_path, mimetype='image/jpeg')
+"""
 
-@content_bp.route("/uploads/<userid>/pfp/<filename>")
+@app.route('/uploads/<userid>/pfp/<filename>')
 def uploaded_pfp(userid, filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], userid, 'pfp', filename)
+    return send_file(file_path, mimetype='image/jpeg')
