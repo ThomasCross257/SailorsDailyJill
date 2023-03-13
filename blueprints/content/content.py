@@ -100,12 +100,12 @@ def editProfile(usr):
                 basename, extension = os.path.splitext(filename)
                 basename = "pfp"
                 filename = f"{basename}-{user['Username']}{extension}"
-                file_path = os.path.join(app.root_path, 'uploads', str(user["_id"]),'profile', filename)
+                file_path = os.path.join(app.root_path, 'static', 'uploads', str(user["_id"]),'profile', filename)
                 if not os.path.exists(os.path.dirname(file_path)):
                     os.makedirs(os.path.dirname(file_path))
                 form.profilePic.data.save(file_path)    
                 # update the user's profile picture in the database
-                user["Profile Picture"] = url_for("content.uploaded_pfp", filename=filename, userid=str(user["_id"]))
+                user["Profile Picture"] = "uploads/" + str(user["_id"]) + "/pfp/" + filename
 
             # check if user has entered a password to confirm changes
             if form.passwordConf.data:
