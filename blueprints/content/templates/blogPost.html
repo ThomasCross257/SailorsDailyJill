@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     {% extends 'base.html' %}
-    {% block title %}{{ title }}{% endblock %}
+    {% block title %}{{ cPost.Title }}{% endblock %}
 </head>
 <body class="bg-dark text-white">
     <div class="container"> 
@@ -10,17 +10,22 @@
         {% include 'navbar.html' %}
         {% endblock %}
         {% block content %}
-        {% if session['user'] == author or currentUsr == "admin"%}
-        <button class="btn btn-success"><a href="{{url_for('content.editpost', post_id=post_id, usr=currentUser)}}">Edit Post</a></button>
+        {% if session['user'] == cPost.Author or session['user'] == "admin"%}
+        <a href="{{url_for('content.editpost', post_id=post_id, usr=currentUser)}}"><button class="btn btn-success">Edit Post</button></a>
+        <a href="{{url_for('content.deletePost', post_id=post_id, usr=currentUser)}}">
         <button class="btn btn-danger" href="#">Delete Post</button>
+        </a>
         {% endif %}
         <br>
         <br>
-        <div class="jumbotron bg-secondary text-white"><h1>{{ title }}</h1></div>
-        <h3 class="text-white userLink">Author: <a href="/content/profile/{{ author }}">{{ author }}</a></h3>
-        <h3 class="text-white">Date: {{ date }}</h3>
-        <h6 class="text-white">Tags: {{ tags }}</h6>
-        <p class="text-white">{{ content }}</p>
+        <div class="jumbotron bg-secondary text-white"><h1>{{ cPost.Title }}</h1></div>
+        <h3 class="text-white userLink">Author: <a href="/content/profile/{{ cPost.Author }}">{{ cPost.Author }}</a></h3>
+        <h3 class="text-white">Date: {{ cPost.Date }}</h3>
+        {% if cPost.Edited == True %}
+            <h3 class="text-white">Edited: {{ cPost['Edited Date'] }}</h3>
+        {% endif %}
+        <h6 class="text-white">Tags: {{ cPost.Tags }}</h6>
+        <p class="text-white">{{ cPost.Content }}</p>
         {% endblock %}
     </div>
 </body>

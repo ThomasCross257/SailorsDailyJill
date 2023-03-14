@@ -8,14 +8,16 @@ def newUser(user, password, email, adminPermission, biography):
         "Profile URL": "/static/img/default.jpg",
     }
     return new_user
-def newPost(title, content, author, date, tags, post_id):
+def newPost(title, content, author, date, tags, post_id, edited, edited_date):
     new_post = {
         '_id' : post_id,
         "Title" : title,
         "Content" : content,
         "Author" : author,
         "Date" : date,
-        "Tags" : tags
+        "Tags" : tags,
+        "Edited" : edited,
+        "Edited Date" : edited_date
     }
     return new_post
 def newComment(comment, author, date, post_id):

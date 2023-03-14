@@ -9,7 +9,7 @@ from libs.globals import user_collection, post_collection, default, follow_colle
 from pymongo.errors import OperationFailure
 from app import app
 from flask_wtf.csrf import validate_csrf, ValidationError
-from libs.forms import BlogForm, EditProfileForm, SearchForm
+from libs.forms import BlogForm, EditProfileForm, SearchForm, DeleteForm
 from werkzeug.utils import secure_filename
 import os
 
@@ -59,7 +59,7 @@ def newpost(usr):
             tags = form.tags.data
             author = usr
             post_id = cl_func.generate_post_id()
-            new_post = schemas.newPost(title, content, author, todaysDate, tags, post_id)
+            new_post = schemas.newPost(title, content, author, todaysDate, tags, post_id, False, "Never")
             if cl_func.tagsValid(tags) == False:
                 return redirect(url_for("content.newpost", usr=usr, error="Invalid tags.", currentUsr=session["user"]))
             post_collection.insert_one(new_post)
@@ -135,7 +135,7 @@ def viewpost(post_id, usr):
     except OperationFailure:
         return render_template("404.html")
     if "user" in session:
-        return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, currentUser=session["user"], post_id=post_id)
+        return render_template("blogPost.html", cPost=current_post, currentUser=session["user"], post_id=post_id)
     else:
         return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, currentUser=default)
 
@@ -161,10 +161,27 @@ def editpost(post_id, usr):
                 title = post["Title"]
             if tags == "" or tags == post["Tags"]:
                 tags = post["Tags"]
-            new_post = schemas.newPost(title, content, author, todaysDate, tags, post_id)
+            new_post = schemas.newPost(title, content, author, post["Date"], tags, post_id, True, todaysDate )
             post_collection.update_one({"_id": post_id}, {"$set": new_post})
             return redirect(url_for("content.viewpost", post_id=post_id, usr=usr, currentUser=session["user"]))
     return render_template("makePost.html", usr=usr, currentUser=session["user"], form=form, editMode=True, post_id=post_id, title=post["Title"], content=post["Content"], tags=post["Tags"])
+
+@content_bp.route("/post/<post_id>/delete=<usr>", methods=["POST", "GET"])
+def deletePost(post_id, usr):
+    form = DeleteForm()
+    current_post = post_collection.find_one({"_id": post_id})
+    if request.method == "POST":
+        if form.validate_on_submit():
+            try:
+                validate_csrf(form.csrf_token.data, app.secret_key)
+            except ValidationError:
+                abort(400, 'Invalid CSRF token')
+            if form.yesButton.data:
+                post_collection.delete_one({"_id": post_id})
+                return redirect(url_for("content.userHome", usr=usr))
+            elif form.noButton.data:
+                return redirect(url_for("content.viewpost", post_id=post_id, usr=usr))
+    return render_template("deletePost.html", usr=usr, currentUser=session["user"], form=form, post_id=post_id, cPost = current_post)
 
 @content_bp.route("/search/<usr>", methods=["POST", "GET"])
 def search(usr):

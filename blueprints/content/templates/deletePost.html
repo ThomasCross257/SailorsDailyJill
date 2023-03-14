@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends 'base.html' %}
+    {% block title %}Delete: {{ cPost.Title }}{% endblock %}
+</head>
+<body class="bg-dark text-white">
+    <div class="container"> 
+        {% block navbar %}
+        {% include 'navbar.html' %}
+        {% endblock %}
+        {% block content %}
+        {% if messages %}
+        <div class="alert alert-danger" role="alert">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form method="POST" action="{{ url_for('content.deletePost', post_id=post_id, usr=currentUser) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="usr" value="{{ currentUser }}">
+            <h3 class="text-white">Are you sure you want to delete this post?</h3>
+            {{ form.yesButton(class="btn btn-danger", id="yes-button") }}
+            {{ form.noButton(class="btn btn-primary", id="no-button") }}
+        </form>
+        
+        <br>
+        <br>
+        <div class="jumbotron bg-secondary text-white"><h1>{{ cPost.Title }}</h1></div>
+        <h3 class="text-white userLink">Author: <a href="/content/profile/{{ cPost.Author }}">{{ cPost.Author }}</a></h3>
+        <h3 class="text-white">Date: {{ cPost.Date }}</h3>
+        {% if cPost.Edited == True %}
+        <h3 class="text-white">Edited: {{ cPost['Edited Date'] }}</h3>
+        {% endif %}
+        <h6 class="text-white">Tags: {{ cPost.Tags }}</h6>
+        <p class="text-white">{{ cPost.Content }}</p>
+        {% endblock %}
+    </div>
+</body>
+</html>

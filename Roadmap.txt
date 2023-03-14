@@ -28,9 +28,9 @@ In Progress:
             New post
             Search
             Admin Dashboard
+            Edit Post
         Needed:
             Delete Post
-            Edit Post
     Nginx Integration: Need to integrate nginx into the docker container.
 Not started:
     Verification methods for new users: Email 2FA, Google 2FA, etc.
