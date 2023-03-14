@@ -138,11 +138,13 @@ def viewpost(post_id, usr):
         return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, currentUser=session["user"], post_id=post_id)
     else:
         return render_template("blogPost.html", content=content, title=title, author=author, date=date, tags=tags, currentUser=default)
+
 @content_bp.route("/post/<post_id>/edit=<usr>", methods=["POST", "GET"])
 def editpost(post_id, usr):
     form = BlogForm()
     post = post_collection.find_one({"_id": post_id})
-    return render_template("makePost.html", usr=usr, currentUser=session["user"], form=form, editMode=True, post_id=post_id, post=post)
+    print (post["Content"])
+    return render_template("makePost.html", usr=usr, currentUser=session["user"], form=form, editMode=True, post_id=post_id, title=post["Title"], content=post["Content"], tags=post["Tags"])
 
 @content_bp.route("/search/<usr>", methods=["POST", "GET"])
 def search(usr):

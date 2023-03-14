@@ -38,15 +38,15 @@
             {{ form.csrf_token }}
             <div class="form-group">
                 <label for="title" class="text-white">Title</label>
-                {{ form.title(class="form-control", placeholder="Enter title", required=True) }}
+                {{ form.title(class="form-control", placeholder="Enter title", required=True, value =title) }}
             </div>
             <div class="form-group">
                 <label for="tags" class="text-white">Tags</label>
-                {{ form.tags(class="form-control", placeholder="Enter tags (comma separated)", required=True) }}
+                {{ form.tags(class="form-control", placeholder="Enter tags (comma separated)", required=True, value=tags) }}
             </div>
             <div class="form-group">
                 <label for="content" class="text-white">Content</label>
-                {{ form.content(class="form-control", required=True) }}
+                {{ form.content(class="form-control", required=True, value=content) }}
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
