@@ -171,16 +171,19 @@ def deletePost(post_id, usr):
     form = DeleteForm()
     current_post = post_collection.find_one({"_id": post_id})
     if request.method == "POST":
+        print(form.validate_on_submit())
         if form.validate_on_submit():
             try:
                 validate_csrf(form.csrf_token.data, app.secret_key)
             except ValidationError:
                 abort(400, 'Invalid CSRF token')
-            if form.yesButton.data:
+            if form.yesButton.data == True:
                 post_collection.delete_one({"_id": post_id})
                 return redirect(url_for("content.userHome", usr=usr))
-            elif form.noButton.data:
+            elif form.noButton.data in True:
                 return redirect(url_for("content.viewpost", post_id=post_id, usr=usr))
+        else:
+            print(form.errors)
     return render_template("deletePost.html", usr=usr, currentUser=session["user"], form=form, post_id=post_id, cPost = current_post)
 
 @content_bp.route("/search/<usr>", methods=["POST", "GET"])

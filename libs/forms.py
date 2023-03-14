@@ -52,5 +52,5 @@ class ProfileForm(FlaskForm):
 
 class DeleteForm(FlaskForm):
     csrf_token = HiddenField()
-    yesButton = SubmitField('Yes', validators=[DataRequired()])
-    noButton = SubmitField('No', validators=[DataRequired()])
+    yesButton = SubmitField('Yes')
+    noButton = SubmitField('No')

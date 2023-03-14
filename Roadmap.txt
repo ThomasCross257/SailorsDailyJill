@@ -19,8 +19,7 @@ Complete:
         Docker Migration: Migrating the website to a docker container.
         Feed Functionality: Allows users to see content from people that they follow.
         Profile images(?): Need server/service where I can host them. (Might be done in docker)
-In Progress:
-    Secured forms: CSRF tokens and other security measures.
+        Secured forms: CSRF tokens and other security measures.
         Completed Tokens:
             Login
             Register
@@ -29,14 +28,18 @@ In Progress:
             Search
             Admin Dashboard
             Edit Post
-        Needed:
             Delete Post
+In Progress:
     Nginx Integration: Need to integrate nginx into the docker container.
 Not started:
     Verification methods for new users: Email 2FA, Google 2FA, etc.
+        This will have to include a database table for storing the verification codes.
+        Furthermore, it will have to include a way to send emails, likely happening after I accquire a domain name.
+
     Kubernetes Integration: Likely begin in late march.
+Prototype 2:
     Website redesign: New color scheme, new layout, new everything, libraries for Advanced text editing.
-    Kubernetes Testing: Testing the website on a kubernetes cluster.
+    Kubernetes Testing: Testing the website on a kubernetes cluster and doing some load testing.
 
 Prototype Version 1 features:
     Be able to log in and create and account.
