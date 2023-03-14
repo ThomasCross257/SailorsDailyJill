@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
     {% extends 'base.html' %}
-    {% block title %}New Post{% endblock %}
+    {% block title %}
+    {% if editMode == False %}
+        New Post
+    {% else %}
+        Edit Post
+    {% endif %}
+    {% endblock %}
 </head>
 <body class="bg-dark text-white">
     <div class="container"> 
