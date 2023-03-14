@@ -143,7 +143,27 @@ def viewpost(post_id, usr):
 def editpost(post_id, usr):
     form = BlogForm()
     post = post_collection.find_one({"_id": post_id})
-    print (post["Content"])
+    if request.method == "POST":
+        if form.validate_on_submit():
+            try:
+                validate_csrf(form.csrf_token.data, app.secret_key)
+            except ValidationError:
+                abort(400, 'Invalid CSRF token')
+            title = form.title.data
+            content = form.content.data
+            tags = form.tags.data
+            author = usr
+            if cl_func.tagsValid(tags) == False:
+                return redirect(url_for("content.editpost", usr=usr, error="Invalid tags.", currentUser=session["user"], post_id=post_id, title=title, content=content, tags=tags))
+            if content == "" or content == post["Content"]:
+                content = post["Content"]
+            if title == "" or title == post["Title"]:
+                title = post["Title"]
+            if tags == "" or tags == post["Tags"]:
+                tags = post["Tags"]
+            new_post = schemas.newPost(title, content, author, todaysDate, tags, post_id)
+            post_collection.update_one({"_id": post_id}, {"$set": new_post})
+            return redirect(url_for("content.viewpost", post_id=post_id, usr=usr, currentUser=session["user"]))
     return render_template("makePost.html", usr=usr, currentUser=session["user"], form=form, editMode=True, post_id=post_id, title=post["Title"], content=post["Content"], tags=post["Tags"])
 
 @content_bp.route("/search/<usr>", methods=["POST", "GET"])

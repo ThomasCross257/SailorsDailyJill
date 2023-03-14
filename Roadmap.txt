@@ -35,5 +35,5 @@ In Progress:
 Not started:
     Verification methods for new users: Email 2FA, Google 2FA, etc.
     Kubernetes Integration: Likely begin in late march.
-    Website redesign: New color scheme, new layout, new everything.
+    Website redesign: New color scheme, new layout, new everything, libraries for Advanced text editing.
     Kubernetes Testing: Testing the website on a kubernetes cluster.

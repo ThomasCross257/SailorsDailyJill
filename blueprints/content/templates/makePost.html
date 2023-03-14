@@ -48,6 +48,10 @@
                 <label for="content" class="text-white">Content</label>
                 {{ form.content(class="form-control", required=True, value=content) }}
             </div>
+            <div class="bg-secondary">
+                <h2 class="text-white">Current body:</h2>
+                <p class="text-white">{{ content }}</p>
+            </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
         {% endif %}
