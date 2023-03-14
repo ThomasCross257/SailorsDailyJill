@@ -37,3 +37,16 @@ Not started:
     Kubernetes Integration: Likely begin in late march.
     Website redesign: New color scheme, new layout, new everything, libraries for Advanced text editing.
     Kubernetes Testing: Testing the website on a kubernetes cluster.
+
+Prototype Version 1 features:
+    Be able to log in and create and account.
+    Be able to edit your profile by changing your picture, username, and bio.
+    Be able to create posts, edit and delete them.
+    Follow users and search for posts using keywords and tags.
+    Be able to view your own posts and posts from users that you follow.
+    Encountering any errors will be logged to a file and redirected to a given page.
+    Be able to view the source code of the website.
+    Be able to view the website on mobile devices and desktops.
+Overall, prototype 1 needs to have basic functionality down before I can start building atop it.
+Once prototype 1 is finished, a branch will be created for the next iteration and will be updated daily as a canary build.
+Prototype one will be completed by the end of March, and will have a docker image ready to be deployed to my k3s cluster..
