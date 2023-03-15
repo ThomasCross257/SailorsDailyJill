@@ -89,3 +89,33 @@ Then run the following
 ```docker
 docker run -p 5000:5000 sailorsdailyjill
 ```
+
+If you want to install this with docker-compose, use the following:
+```docker
+version: "3"
+services:
+  app:
+    container_name: SailorsDailyJill
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      MONGO_URI: <your-mongo-uri>
+      FLASK_APP: main.py
+      FLASK_ENV: production
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+      ```

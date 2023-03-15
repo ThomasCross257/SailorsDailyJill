@@ -4,3 +4,4 @@ Dockerfile
 .vscode
 *.pyc
 static/uploads/*
+docker-compose.yml

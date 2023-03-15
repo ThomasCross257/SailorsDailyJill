@@ -17,6 +17,8 @@ content_bp = Blueprint('content', __name__, template_folder='templates', url_pre
 
 todaysDate = date.today().strftime("%m/%d/%y")
 
+# Homepage functionalities
+
 @content_bp.route("/profile/<usr>", methods=["GET", "POST"])
 def userHome(usr):
     userPage = user_collection.find_one({"Username": usr})
@@ -45,30 +47,6 @@ def userHome(usr):
     else:
         return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList), currentUsr=default)
     
-@content_bp.route("/profile/create-post/<usr>", methods=["POST", "GET"])
-def newpost(usr):
-    form = BlogForm()
-    if request.method == "POST":
-        if form.validate_on_submit():
-            try:
-                validate_csrf(form.csrf_token.data, app.secret_key)
-            except ValidationError:
-                redirect (url_for("errors.errorhandler(400)", usr=usr, currentUsr=session["user"]))
-            title = form.title.data
-            content = form.content.data
-            tags = form.tags.data
-            author = usr
-            post_id = cl_func.generate_post_id()
-            new_post = schemas.newPost(title, content, author, todaysDate, tags, post_id, False, "Never")
-            if cl_func.tagsValid(tags) == False:
-                return redirect(url_for("content.newpost", usr=usr, error="Invalid tags.", currentUsr=session["user"]))
-            post_collection.insert_one(new_post)
-            return redirect(url_for("content.viewpost", post_id=post_id, usr=usr, currentUsr=session["user"]))
-    else:
-        if "user" in session:
-            return render_template("makePost.html", usr=usr, currentUser=session["user"], form=form, editMode=False)
-        else:
-            return redirect(url_for("auth.login", usr=default))
 
 @content_bp.route("/profile/edit-profile/<usr>", methods=["POST", "GET"])
 def editProfile(usr):
@@ -121,7 +99,64 @@ def editProfile(usr):
                 return redirect(url_for("content.editProfile", usr=usr))
     return render_template("editProfile.html", form=form, usr=usr, user=user)
 
+@content_bp.route("/profile/<usr>/archive")
+def archive(usr):
+    userPage = user_collection.find_one({"Username": usr})
+    userPosts = post_collection.find({"Author": usr})
+    postList = []
+    for post in userPosts:
+        if post["Author"] == usr:
+            postList.append(post)
+    postList = postList[::-1]
+    if "user" in session == True:
+        return render_template("archive.html", usr=usr, posts=postList, postLen=len(postList), userPage=userPage, currentUser=session["user"])
+    else:
+        return render_template("archive.html", usr=usr, posts=postList, postLen=len(postList), userPage=userPage, currentUser=default)
+    
+@content_bp.route("/feed/<currentUsr>")
+def feed(currentUsr):
+    if "user" in session:
+        following = follow_collection.find({"Username": session["user"]})
+        postList = []
+        followList = []
+        for user in following:
+            followList.extend(user["Following"])
+        for user in followList:
+            userPosts = post_collection.find({"Author": user})
+            for post in userPosts:
+                postList.append(post)
+        postList = postList[::-1]
+        return render_template("feed.html", currentUsr=session["user"], posts=postList, postLen=len(postList))
 
+    else:
+        return redirect(url_for("auth.login", usr=default, currentUsr=default))
+
+# Post functionalities
+
+@content_bp.route("/profile/create-post/<usr>", methods=["POST", "GET"])
+def newpost(usr):
+    form = BlogForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            try:
+                validate_csrf(form.csrf_token.data, app.secret_key)
+            except ValidationError:
+                redirect (url_for("errors.errorhandler(400)", usr=usr, currentUsr=session["user"]))
+            title = form.title.data
+            content = form.content.data
+            tags = form.tags.data
+            author = usr
+            post_id = cl_func.generate_post_id()
+            new_post = schemas.newPost(title, content, author, todaysDate, tags, post_id, False, "Never")
+            if cl_func.tagsValid(tags) == False:
+                return redirect(url_for("content.newpost", usr=usr, error="Invalid tags.", currentUsr=session["user"]))
+            post_collection.insert_one(new_post)
+            return redirect(url_for("content.viewpost", post_id=post_id, usr=usr, currentUsr=session["user"]))
+    else:
+        if "user" in session:
+            return render_template("makePost.html", usr=usr, currentUser=session["user"], form=form, editMode=False)
+        else:
+            return redirect(url_for("auth.login", usr=default))
 
 @content_bp.route("/post/<post_id>/=<usr>")
 def viewpost(post_id, usr):
@@ -186,6 +221,8 @@ def deletePost(post_id, usr):
             print(form.errors)
     return render_template("deletePost.html", usr=usr, currentUser=session["user"], form=form, post_id=post_id, cPost = current_post)
 
+# Search functionality
+
 @content_bp.route("/search/<usr>", methods=["POST", "GET"])
 def search(usr):
     form = SearchForm()
@@ -207,44 +244,7 @@ def search(usr):
         else:
             return redirect(url_for("auth.login", usr=default, currentUsr=default))
 
-@content_bp.route("/profile/<usr>/archive")
-def archive(usr):
-    userPage = user_collection.find_one({"Username": usr})
-    userPosts = post_collection.find({"Author": usr})
-    postList = []
-    for post in userPosts:
-        if post["Author"] == usr:
-            postList.append(post)
-    postList = postList[::-1]
-    if "user" in session == True:
-        return render_template("archive.html", usr=usr, posts=postList, postLen=len(postList), userPage=userPage, currentUser=session["user"])
-    else:
-        return render_template("archive.html", usr=usr, posts=postList, postLen=len(postList), userPage=userPage, currentUser=default)
-    
-@content_bp.route("/feed/<currentUsr>")
-def feed(currentUsr):
-    if "user" in session:
-        following = follow_collection.find({"Username": session["user"]})
-        postList = []
-        followList = []
-        for user in following:
-            followList.extend(user["Following"])
-        for user in followList:
-            userPosts = post_collection.find({"Author": user})
-            for post in userPosts:
-                postList.append(post)
-        postList = postList[::-1]
-        return render_template("feed.html", currentUsr=session["user"], posts=postList, postLen=len(postList))
-
-    else:
-        return redirect(url_for("auth.login", usr=default, currentUsr=default))
-"""
-@app.route('/uploads/<userid>/pfp/<filename>')
-def uploaded_file(userid, filename):
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], userid, 'pfp', filename)
-    return send_file(file_path, mimetype='image/jpeg')
-"""
-
+# Profile Picture URL
 @app.route('/uploads/<userid>/pfp/<filename>')
 def uploaded_pfp(userid, filename):
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], userid, 'pfp', filename)
