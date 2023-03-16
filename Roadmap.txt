@@ -29,8 +29,7 @@ Complete:
             Admin Dashboard
             Edit Post
             Delete Post
-In Progress:
-    Nginx Integration: Need to integrate nginx into the docker container.
+Nginx Integration: Need to integrate nginx into the docker container.
 Not started:
     Verification methods for new users: Email 2FA, Google 2FA, etc.
         This will have to include a database table for storing the verification codes.
