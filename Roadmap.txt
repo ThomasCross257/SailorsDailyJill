@@ -30,11 +30,10 @@ Complete:
             Edit Post
             Delete Post
 Nginx Integration: Need to integrate nginx into the docker container.
-Not started:
+In progress:
     Verification methods for new users: Email 2FA, Google 2FA, etc.
         This will have to include a database table for storing the verification codes.
         Furthermore, it will have to include a way to send emails, likely happening after I accquire a domain name.
-
     Kubernetes Integration: Likely begin in late march.
 Prototype 2:
     Website redesign: New color scheme, new layout, new everything, libraries for Advanced text editing.
