@@ -5,3 +5,4 @@ Dockerfile
 *.pyc
 static/uploads/*
 docker-compose.yml
+nginx/static

@@ -81,10 +81,23 @@ EXPOSE 5000
 # Set environment variables
 ENV FLASK_APP=main.py
 ENV FLASK_ENV=production
-ENV MONGO_URI= <your mongo URI>
+ENV MONGO_URI=<your mongo URI>
 
-CMD ["python", "waitress-serve.py"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "main:app"]
 ```
+
+If you want to host it on an Nginx server, create a Dockerfile in a folder called nginx with the following:
+
+```docker
+FROM nginx:1.15.8
+
+RUN rm /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/
+RUN rm /etc/nginx/conf.d/default.conf
+COPY project.conf /etc/nginx/conf.d/
+COPY static /app/static
+```
+
 Then run the following
 ```docker
 docker run -p 5000:5000 sailorsdailyjill
@@ -94,6 +107,9 @@ If you want to install this with docker-compose, use the following:
 ```docker
 version: "3"
 
+volumes:
+  static:
+
 services:
   app:
     container_name: sailorsdailyjill
@@ -101,26 +117,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: gunicorn app:app -b 0.0.0.0:8000
-    expose:
-      - "8000"
+    command: gunicorn -w 1 -b 0.0.0.0:8000 main:app
+    ports:
+      - "8000:8000"
     volumes:
       - .:/app
     environment:
       MONGO_URI: <your mongo URI>
       FLASK_APP: main.py
-      FLASK_ENV: production
-    ports:
-      - "5000:5000"
+      FLASK_DEBUG: production
 
   nginx:
-    image: nginx:latest
+    container_name: sailorsdailyjill-nginx
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    volumes:
+      - static:/app/static
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - app
-
       ```
