@@ -43,7 +43,13 @@ def login():
     else:
         return render_template('login.html', usr=default, currentUsr=default, form=form)
 
-
+@auth_bp.route('/signup')
+def signup():
+    if "user" in session:
+        return redirect(url_for('content.userHome', usr=session["user"], currentUsr=session["user"]))
+    else:
+        return render_template('signup.html', usr=default, currentUsr=default)
+"""
 @auth_bp.route('/signup', methods=['POST', 'GET'])
 def signup():
     form = forms.RegisterForm()
@@ -67,6 +73,8 @@ def signup():
                 return redirect(url_for('auth.signup', usr=default, currentUsr=default, error=registerResult))
     else:
         return render_template('signup.html', usr=default, currentUsr=default, form=form)
+
+"""
 
 @auth_bp.route("/logout/<usr>")
 def logout_r(usr):
