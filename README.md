@@ -64,6 +64,11 @@ Clone this repository much like the local install.
 git clone https://github.com/ThomasCross257/SailorsDailyJill.git
 ```
 
+Echo your mongo URI to make it into a secret:
+```bash
+echo "YOUR_MONGO_URI" | docker secret create mongo-uri -
+```
+
 Create a Dockerfile with the following:
 ```docker
 # Base image. Change the image as you see fit
@@ -81,7 +86,7 @@ EXPOSE 5000
 # Set environment variables
 ENV FLASK_APP=main.py
 ENV FLASK_ENV=production
-ENV MONGO_URI=<your mongo URI>
+ENV MONGO_URI=/run/secrets/mongo-uri
 
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "main:app"]
 ```

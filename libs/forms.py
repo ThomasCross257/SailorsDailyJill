@@ -42,7 +42,6 @@ class RegisterForm(FlaskForm):
     email = StringField('Email Address', validators=[DataRequired(), Email(message='Invalid email'), Length(max=50)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=80)])
     passwordConf = PasswordField('Confirm Password', validators=[DataRequired(), Length(min=8, max=80)])
-    admin = RadioField('Admin', validators=[DataRequired()], choices=[('True', 'True'), ('False', 'False')])
 
 class SearchForm(FlaskForm):
     search = StringField('Search', validators=[DataRequired(), Length(min=4, max=50)])
@@ -54,3 +53,8 @@ class DeleteForm(FlaskForm):
     csrf_token = HiddenField()
     yesButton = SubmitField('Yes')
     noButton = SubmitField('No')
+
+class VerifyForm(FlaskForm):
+    csrf_token = HiddenField()
+    CodeEntry = StringField('Verification Code', validators=[DataRequired(), Length(min=4, max=50)])
+    verifyButton = SubmitField('Verify')

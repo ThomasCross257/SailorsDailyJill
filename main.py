@@ -1,5 +1,5 @@
 from flask import redirect, url_for, render_template, session
-from libs.globals import default
+from libs.globals import default, mailServer, mailPort, mailUseSSL, mailUsername, mailPassword
 from blueprints.admin.admin import admin_bp
 from blueprints.auth.auth import auth_bp
 from blueprints.content.content import content_bp
@@ -11,6 +11,12 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(content_bp)
 app.register_blueprint(error_bp)
 
+app.config['MAIL_SERVER'] = mailServer
+app.config['MAIL_PORT'] = mailPort
+app.config['MAIL_USE_SSL'] = mailUseSSL
+app.config['EMAILUSERNAME'] = mailUsername
+app.config['EMAILPASS'] = mailPassword
+app.config['EMAILDEFAULT'] = "noReply"
 
 @app.route("/")
 def home():

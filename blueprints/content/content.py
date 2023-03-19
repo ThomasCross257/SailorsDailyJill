@@ -22,6 +22,8 @@ todaysDate = date.today().strftime("%m/%d/%y")
 @content_bp.route("/profile/<usr>", methods=["GET", "POST"])
 def userHome(usr):
     userPage = user_collection.find_one({"Username": usr})
+    if userPage is None:
+        abort(404)
     userPosts = post_collection.find({"Author": usr}).limit(5)
     postList = []
     for post in userPosts:

@@ -6,3 +6,7 @@ Dockerfile
 static/uploads/*
 docker-compose.yml
 nginx/static
+nginx/*.pem
+nginx/*.crt
+nginx/*.key
+mongo-uri.txt

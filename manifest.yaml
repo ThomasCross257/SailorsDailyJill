@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sailorsdailyjill
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongo-uri
+  namespace: sailorsdailyjill
+type: Opaque
+data:
+  mongo-uri: <base64 encoded mongo URI>
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sailorsdailyjill-app
+  namespace: sailorsdailyjill
+spec:
+  selector:
+    matchLabels:
+      app: sailorsdailyjill-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sailorsdailyjill-app
+    spec:
+      containers:
+        - name: sailorsdailyjill-app
+          image: sailorsdailyjill-app
+          ports:
+            - containerPort: 8000
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-uri
+                  key: mongo-uri
+          resources:
+            limits:
+              cpu: 1
+              memory: 512Mi
+            requests:
+              cpu: 0.5  
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 60
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sailorsdailyjill-app
+  namespace: sailorsdailyjill
+spec:
+  selector:
+    app: sailorsdailyjill-app
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sailorsdailyjill-nginx
+  namespace: sailorsdailyjill
+spec:
+  selector:
+    matchLabels:
+      app: sailorsdailyjill-nginx
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sailorsdailyjill-nginx
+  namespace: sailorsdailyjill
+spec:
+  selector:
+    app: sailorsdailyjill-nginx
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+    - name: https
+      port: 443
+      targetPort: 443
+  type: LoadBalancer
