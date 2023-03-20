@@ -1,4 +1,4 @@
-def newUser(user, password, email, adminPermission, biography, verificationCode):
+def newUser(user, password, email, adminPermission, biography):
     new_user ={
         "Username" : user,
         "Password" : password,
@@ -6,8 +6,6 @@ def newUser(user, password, email, adminPermission, biography, verificationCode)
         "Admin" : adminPermission,
         "Biography" : biography,
         "Profile URL": "/static/img/default.jpg",
-        "Verified" : False,
-        "Verification Code" : verificationCode
     }
     return new_user
 def newPost(title, content, author, date, tags, post_id, edited, edited_date):

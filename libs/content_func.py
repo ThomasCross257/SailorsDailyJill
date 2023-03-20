@@ -29,8 +29,9 @@ def createFollowSchema(user):
         follow_collection.insert_one(new_follow)
 
 def isFollowing(user, follow):
-    if follow_collection.find_one({"Username": user})["Following"] is not None:
-        if follow in follow_collection.find_one({"Username": user})["Following"]:
+    document = follow_collection.find_one({"Username": user})
+    if document and document.get("Following"):
+        if follow in document["Following"]:
             return True
     return False
 

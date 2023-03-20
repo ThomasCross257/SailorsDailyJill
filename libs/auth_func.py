@@ -32,7 +32,7 @@ def is_valid_email(email):
 
     return True
 
-def registerAccount(username, email, password, passwordConf, verifyCode):
+def registerAccount(username, email, password, passwordConf):
     if not all([username, email, password, passwordConf]):
         return "Error: Required field(s) missing"
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -45,8 +45,7 @@ def registerAccount(username, email, password, passwordConf, verifyCode):
         return "Error: Username already exists"
     if user_collection.find_one({"Email address": email}) is not None:
         return "Error: Email already in use"
-    hashedCode = bcrypt.hashpw(verifyCode.encode('utf-8'), bcrypt.gensalt())
-    new_user = newUser(username, hashed_password, email, False, "This is a new user.", hashedCode)
+    new_user = newUser(username, hashed_password, email, False, "This is a new user.")
     user_collection.insert_one(new_user)
     return "Success: User created"
 
