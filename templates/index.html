@@ -5,30 +5,35 @@
     {% block title %}Home{% endblock %}
 </head>
 <body class="bg-dark">
-    <div class="container">
         {% block navbar %}
         {% include 'navbar.html' %}
         {% endblock %}
+        <div class="container-fluid">
         {% block content %}
-        <div class="row">
-            <div class="col-md-12">
-                <div class="jumbotron jumbotron-fluid bg-secondary">
-                    <div class="container">
-                        <h1 class="display-4 text-white">Welcome to Sailor's Daily Jill!</h1>
-                        <p class="lead text-white">This is a website made by me, using Python, Flask, Bootstrap and a lot of HTML!</p>
-                        <p class="lead text-white">This website is a simple blog, where you can post your thoughts and read other people's posts.</p>
-                        <p class="lead text-white">You can also search for posts by title, author or content.</p>
-                        <p class="lead text-white">You can also edit your posts, delete them or even delete your account.</p>
-                        <p class="lead text-white">If you want to see the database, you can do so by clicking the Database button in the navbar, should you have access.</p>
-                        <p class="lead text-white">If you want to see the code, you can do so by clicking the GitHub button in the navbar.</p>
-                        <div class="text-center">
-                            <img src="{{ url_for('static', filename='img/ApplicationLogo.png') }}" class="img-fluid" alt="Flask with a compass inside">
-                        </div>
+            <div class="jumbotron jumbotron-fluid" style="background-color:#266689">
+                <div class="container">
+                    <h1 class="display-4 text-white text-center">Welcome to Sailor's Daily Jill.</h1>
+                    <div class="text-center">
+                        <img src="{{ url_for('static', filename='img/Compass.png') }}" class="img-fluid" alt="Flask with a compass inside">
                     </div>
-                
-            </div> 
-        </div>
-    </div>
+                    <h1 class="display-4 text-white text-center">Your daily dose of the content you want.</h1>
+                </div>
+            </div>
+            <div class="d-inline-flex justify-content-center flex-row">
+                <div class="p-3 m-3 text-white" style="background-color:#6D6D6D; width: 400px;">
+                  <h3 class="display-4 text-white text-center">No algorithms</h3>
+                  <p>Escape the droning boredom of algorithmically driven content. Focus on what you want to see, whenever and wherever you want to see it</p>
+                </div>
+                <div class="p-3 m-3 text-white" style="background-color:#6D6D6D; width: 400px;">
+                  <h3 class="display-4 text-white text-center">Custom Profiles</h3>
+                  <p>It's your blog. Customize it how you see fit. With custom profile pictures, bios and more, you'</p>
+                </div>
+                <div class="p-3 m-3 text-white" style="background-color:#6D6D6D; width: 400px;">
+                  <h3 class="display-4 text-white text-center">Open Source</h3>
+                  <p>No begging for changes needed here. Contributing to open source development helps us keep the internet as free and open as it should be.</p>
+                </div>
+            </div>
     {% endblock %}
+    </div>
 </body>
 </html>
