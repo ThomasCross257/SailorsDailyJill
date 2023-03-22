@@ -1,0 +1,46 @@
+version: "3"
+
+volumes:
+  static:
+services:
+  app:
+    container_name: sailorsdailyjill
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: gunicorn -w 1 -b 0.0.0.0:8000 main:app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      MONGO_URI: /app/mongo_uri.txt
+      FLASK_APP: main.py
+      FLASK_DEBUG: production
+    networks:
+      sailorsdailyjill:
+        ipv4_address: 172.18.0.2
+
+  nginx:
+    container_name: sailorsdailyjill-nginx
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    volumes:
+      - static:/app/static
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+    networks:
+      sailorsdailyjill:
+        ipv4_address: 172.18.0.3
+networks:
+  sailorsdailyjill:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16

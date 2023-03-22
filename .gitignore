@@ -1,10 +1,8 @@
 .env
 __pycache__
-Dockerfile
 .vscode
 *.pyc
 static/uploads/*
-docker-compose.yml
 nginx/static
 nginx/*.pem
 nginx/*.crt
