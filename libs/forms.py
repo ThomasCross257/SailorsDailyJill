@@ -12,6 +12,7 @@ class EditProfileForm(FlaskForm):
     bio = TextAreaField('Bio')
     passwordConf = PasswordField('Confirm Password')
     profilePic = FileField('Profile Picture')
+    color = StringField('Color', validators=[DataRequired()])
     csrf_token = HiddenField()
 
 
@@ -26,7 +27,7 @@ class EditUserForm(FlaskForm):
     csrf_token = HiddenField()
 
     def __init__(self, user, *args, **kwargs):
-        super(EditProfileForm, self).__init__(*args, **kwargs)
+        super(EditUserForm, self).__init__(*args, **kwargs)
         self.username.default = user["Username"]
         self.bio.default = user["Biography"]
         self.email.default = user["Email address"]

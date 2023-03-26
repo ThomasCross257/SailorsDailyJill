@@ -10,72 +10,72 @@
         {% include 'navbar.html' %}
         {% endblock %}
         {% block content %}
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <form method="POST" class="d-flex">
-                {% if currentUsr != userPage.Username and currentUsr != None %}
-                    {% if isFollowing == False %}
-                        <button class="btn btn-primary">Follow</button>
-                    {% endif %}
-                    {% if isFollowing == True %}
-                        <button class="btn btn-danger">Unfollow</button>
-                    {% endif %}
-                {% endif %}
-                </form>
-                <a href="/content/profile/{{ userPage.Username }}/archive"><button class="btn btn-info">Archive</button></a>
-                {% if currentUsr == userPage.Username %}
-                <a href="/content/profile/edit-profile/{{ currentUsr }}"> 
-                <button class="btn btn-success">Edit Profile</button></a>
-                <a href="/content/profile/create-post/{{ currentUsr }}"> 
-                <button class="btn btn-secondary">Create Post</button></a>
-                {% endif %}
-            </div>
-        </div>
-        <div class="row mt-5">
-            <div class="col-md-4">
-                <div class="card bg-secondary">
-                    <div class="card-body">
-                        {% if userPage['Profile Picture'] %}
-                        <img src="{{ url_for('static', filename=userPage['Profile Picture']) }}" class="card-img-top" alt="Profile Picture">
-                        {% else %}
-                            <img src="/static/img/default.jpg" class="card-img-top" alt="Profile Picture">
-                        {% endif %}
-                        <br>
-                        <br>
-                        <h5 class="card-title text-white">{{ userPage.Username }}</h5>
-                        <p class="card-text text-white">{{ userPage.Biography }}</p>
+        <div class="container">
+            {% if userPage.Color %}
+                <div style="background-color:{{ userPage.Color }}">
+            {% else %}
+                <div style="background-color:#266689">
+            {% endif %}
+            <div class="row mt-5">
+                <div class="col-md-4">
+                    <div class="card bg-transparent">
+                        <div class="card-body">
+                            <h1 class="mb-4 text-white" style = "mix-blend-mode: difference;">{{ userPage.Username }}</h1>
+                            {% if userPage['Profile Picture'] %}
+                            <img src="{{ url_for('static', filename=userPage['Profile Picture']) }}" class="card-img-top" alt="Profile Picture"
+                            style="width:100%; height:100%;">
+                            {% else %}
+                            <img src="/static/img/default.jpg" class="card-img-top" alt="Profile Picture"
+                            style="width:100%; height:100%;">
+                            {% endif %}
+                            <h3 class="mb-4 text-white" style = "mix-blend-mode: difference;">Biography</h3>
+                            <p class="card-text text-white" style = "mix-blend-mode: difference;">{{ userPage.Biography }}</p>
+                        </div>
                     </div>
                 </div>
-                <div class="card mt-3 bg-secondary">
-                    <div class="card-body bg-secondary">
-                        <h5 class="card-title bg-secondary text-white">Recent Posts</h5>
-                        <ul class="list-group list-group-flush bg-secondary">
+                <div class="col-md-8">
+                        <div class="row mt-4 d-flex justify-content-end">
+                            <div class="col-md-6">
+                                <form method="POST">
+                                    {% if currentUsr != userPage.Username and currentUsr != None %}
+                                        {% if isFollowing == False %}
+                                            <button class="btn btn-primary">Follow</button>
+                                        {% endif %}
+                                        {% if isFollowing == True %}
+                                            <button class="btn btn-danger">Unfollow</button>
+                                        {% endif %}
+                                    {% endif %}
+                                </form>
+                                <a href="/content/profile/{{ userPage.Username }}/archive"><button class="btn btn-info ml-2">Archive</button></a>
+                                {% if currentUsr == userPage.Username %}
+                                    <a href="/content/profile/edit-profile/{{ currentUsr }}"> 
+                                    <button class="btn btn-success ml-2">Edit Profile</button></a>
+                                    <a href="/content/profile/create-post/{{ currentUsr }}"> 
+                                    <button class="btn btn-secondary ml-2">Create Post</button></a>
+                                {% endif %}
+                            </div>
+                        </div>                        
+                        <h2 class="card-title text-white" style = "mix-blend-mode: difference;">Recent Posts</h5>
+                        <ul class="list-group list-group-flush">
                         {% if postLen > 0 %}    
                             {%for post in posts%}
                             {% if currentUsr == None %}
-                            <li class="list-group-item bg-secondary"><a href="{{ url_for('content.viewpost', post_id=post._id, usr=default) }}" class="link-light">{{ post.Title }}</a></li>
+                            <li class="list-group-item bg-transparent"><a href="{{ url_for('content.viewpost', post_id=post._id, usr=default) }}" class="link-light" style = "mix-blend-mode: difference;">{{ post.Title }} <br> Posted on: {{post.Date}}</a></li>
                             {% else %}
-                            <li class="list-group-item bg-secondary"><a href="{{ url_for('content.viewpost', post_id=post._id, usr=currentUsr) }}" class="link-light">{{ post.Title }}</a></li>
+                            <li class="list-group-item bg-transparent"><a href="{{ url_for('content.viewpost', post_id=post._id, usr=currentUsr) }}" class="link-light" style = "mix-blend-mode: difference;">{{ post.Title }} <br> Posted on: {{post.Date}}</a></li>
                             {% endif %}
                             {%endfor%}
                         {% endif %}
                         {% if postLen == 0 %}
-                            <li class="list-group-item bg-secondary"><a href="#" class="link-light">No posts yet</a></li>
+                            <li class="list-group-item"><a href="#" class="link-light">No posts yet</a></li>
                         {%endif%}
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <h1 class="mb-4 text-white" >{{ userPage.Username }}</h1>
-                <h2 class="text-white">Recent Activity</h2>
-                <ul>
-                    <li class="text-white">Posted a new article</li>
-                    <li class="text-white">Commented on a post</li>
-                    <li class="text-white">Liked a photo</li>
-                </ul>
             </div>
         </div>
+        
         {% endblock %}
     </div>
 </body>

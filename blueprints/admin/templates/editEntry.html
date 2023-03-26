@@ -7,48 +7,48 @@
 <body class="bg-dark">
     <div class="container-fluid">
         {% block navbar %}
-        {% include 'adminNavbar.html' %}
+        {% include 'navbar.html' %}
         {% endblock %}
         {% block content %}
-        <div id="new_Entry" class="mt-4">
+        <div id="edit_user" class="mt-4">
             <div class="container">
             <a href="{{ url_for('admin.database', usr=session['user']) }}"><button id="Return" class="btn btn-secondary m-2">Back to DB</button></a>
             <form class="bg-secondary p-3" action="{{ url_for('admin.newEntry', usr=session['user']) }}" method="POST">    
                 {{ form.csrf_token }}
                 <div class="form-group mt-2">
-                    <label for="db_Username"><h2 class="text-white">Username:</h2></label>
-                    {{ form.username(class="form-control", placeholder=User.Username, required="required") }}
+                    <label for="username"><h2 class="text-white">Username:</h2></label>
+                    {{ form.username(class="form-control", value=User.Username, required="required") }}
                 </div>
                 <div class="form-group">
-                    <label for="db_Email"><h2 class="text-white">Email:</h2></label>
-                    {{ form.email(class="form-control", placeholder="{{User['Email']}}", required="required") }}
+                    <label for="email"><h2 class="text-white">Email:</h2></label>
+                    {{ form.email(class="form-control", value=User["Email address"], required="required") }}
                 </div>
                 <div class="form-group">
-                    <label for="db_Pass"><h2 class="text-white">Password:</h2></label>
-                    {{ form.password(class="form-control", placeholder="Password", required="required") }}
+                    <label for="email"><h2 class="text-white">Biography:</h2></label>
+                    {{ form.email(class="form-control", value=User.Biography, required="required") }}
                 </div>
                 <div class="form-group">
-                    <label for="db_Pass-conf"><h2 class="text-white">Confirm Password:</h2></label>
-                    {{ form.password_conf(class="form-control", placeholder="Confirm Password", required="required") }}
+                    <label for="password"><h2 class="text-white">Password:</h2></label>
+                    {{ form.password(class="form-control", placeholder="Leave blank to keep current password") }}
                 </div>
                 <div class="form-group">
-                    <label for="db_admincheck"><h2 class="text-white">Admin:</h2></label>
-                    {% if User.Admin == True %}
+                    <label for="password_conf"><h2 class="text-white">Confirm Password:</h2></label>
+                    {{ form.passwordConf(class="form-control", placeholder="Confirm Password") }}
+                </div>
+                <div class="form-group">
+                    <label for="admin"><h2 class="text-white">Admin:</h2></label>
                     <select class="form-select" name="admin">
-                        <option selected>Open this Menu</option>
-                        {{ form.admin(class="form-select", placeholder="True", required="required", selected) }}
-                        {{ form.admin(class="form-select", placeholder="False", required="required") }}}
+                        {% if User.Admin %}
+                        <option value="True" selected>True</option>
+                        <option value="False">False</option>
+                        {% else %}
+                        <option value="True">True</option>
+                        <option value="False" selected>False</option>
+                        {% endif %}
                     </select>
-                    {% else %}
-                    <select class="form-select" name="admin">
-                        <option selected>Open this Menu</option>
-                        {{ form.admin(class="form-select", placeholder="True", required="required") }}
-                        {{ form.admin(class="form-select", placeholder="False", required="required", selected) }}
-                    </select>
-                    {% endif %}
                 </div>
 
-                <button id="Submit" class="btn btn-primary">Submit</button>
+                <button id="submit" class="btn btn-primary">Submit</button>
             </div>
             <h2 class="text-white">{{ error }}</h2>
         </div>
@@ -56,4 +56,5 @@
         {% endblock %}
     </div>
 </body>
+
 </html>

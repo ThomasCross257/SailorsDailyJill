@@ -10,6 +10,7 @@
         {% include 'navbar.html' %}
         {% endblock %}
         {% block content %}
+        <div class="container">
             <div class="row">
                 <div class="col-12">
                     <form action="#" method="post">
@@ -25,12 +26,13 @@
                             </div>
                         </div>
                     </form>
+        </div>
                     {% if search %}
                         <p class="text-white">Search results:</p>
                         <br><br>
                             {% for post in search %}
-                            <a href="post/{{post._id}}" class="text-decoration-none">
-                                <div class="container bg-secondary">
+                            <a href="{{ url_for('content.viewpost', post_id=post._id, usr=currentUser) }}" class="text-decoration-none">
+                                <div class="container bg-secondary searchresult">
                                     <h3 class="text-white">{{ post.Title }}</h3>
                                     <h4 class="text-white">Author: {{ post.Author }}</h4>
                                     <h4 class="text-white">Date: {{ post.Date }}</h4>

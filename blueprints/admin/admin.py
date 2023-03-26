@@ -3,7 +3,7 @@ import libs.admin_func as admin_func
 import libs.auth_func as auth_func
 import libs.content_func as cl_func
 from libs.globals import user_collection, post_collection, default
-from libs.forms import EditProfileForm, RegisterForm, SearchForm, DeleteForm
+from libs.forms import EditUserForm, RegisterForm, SearchForm, DeleteForm
 from flask_wtf.csrf import validate_csrf, ValidationError
 from app import app
 
@@ -56,7 +56,8 @@ def newEntry(usr):
 
 @admin_bp.route("/database/editEntry/<usr>/<usrEdit>", methods=["GET", "POST"])
 def editEntry(usr, usrEdit):
-    form = EditProfileForm()
+    User = user_collection.find_one({"Username": usrEdit})
+    form = EditUserForm(User)
     if usr != "admin":
         if "user" in session:
             return redirect(url_for("content.userHome", usr=session["user"], currentUsr=session["user"]))
@@ -76,7 +77,6 @@ def editEntry(usr, usrEdit):
             profilePic = form.profilePic.data
             return admin_func.update_user(usrEdit, username, email, password, passwordConf, admin, profilePic)
         else:
-            User = user_collection.find_one({"Username": usrEdit})
             print(User)
             return render_template("editEntry.html", usr=session["user"], User=User, form=form)
 

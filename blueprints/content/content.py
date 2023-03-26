@@ -74,19 +74,24 @@ def editProfile(usr):
                 user["Biography"] = form.bio.data
 
             # check if user has uploaded a new profile picture
-            if form.profilePic.raw_data:
-                # save the uploaded file to the server
-                filename = secure_filename(form.profilePic.data.filename)
-                basename, extension = os.path.splitext(filename)
-                basename = "pfp"
-                filename = f"{basename}-{user['Username']}{extension}"
-                file_path = os.path.join(app.root_path, 'static', 'uploads', str(user["_id"]),'profile', filename)
-                if not os.path.exists(os.path.dirname(file_path)):
-                    os.makedirs(os.path.dirname(file_path))
-                form.profilePic.data.save(file_path)    
-                # update the user's profile picture in the database
-                user["Profile Picture"] = "uploads/" + str(user["_id"]) + "/pfp/" + filename
+            if form.profilePic.data.filename != '':
+            # Check if the uploaded file is different from the current profile picture
+                if form.profilePic.data.filename != user['Profile Picture']:
+                    # save the uploaded file to the server
+                    filename = secure_filename(form.profilePic.data.filename)
+                    basename, extension = os.path.splitext(filename)
+                    basename = "pfp"
+                    filename = f"{basename}-{user['Username']}{extension}"
+                    file_path = os.path.join(app.root_path, 'static', 'uploads', str(user["_id"]),'pfp', filename)
+                    if not os.path.exists(os.path.dirname(file_path)):
+                        os.makedirs(os.path.dirname(file_path))
+                    form.profilePic.data.save(file_path)    
+                    # update the user's profile picture in the database
+                    user["Profile Picture"] = "uploads/" + str(user["_id"]) + "/pfp/" + filename
 
+            
+            if form.color.data:
+                user["Color"] = form.color.data
             # check if user has entered a password to confirm changes
             if form.passwordConf.data:
                 if bcrypt.checkpw(form.passwordConf.data.encode('utf-8'), user["Password"]):
@@ -99,6 +104,7 @@ def editProfile(usr):
             else:
                 flash("Please enter your password to confirm changes.", "error")
                 return redirect(url_for("content.editProfile", usr=usr))
+            
     return render_template("editProfile.html", form=form, usr=usr, user=user)
 
 @content_bp.route("/profile/<usr>/archive")

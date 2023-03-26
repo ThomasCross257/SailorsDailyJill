@@ -7,40 +7,48 @@
 <body class="bg-dark">
     <div class="container-fluid">
         {% block navbar %}
-        {% include 'adminNavbar.html' %}
+        {% include 'navbar.html' %}
         {% endblock %}
         {% block content %}
         <div id="new_Entry" class="mt-4">
             <div class="container">
-            <a href="{{ url_for('admin.database', usr=session['user']) }}"><button id="Return" class="btn btn-secondary m-2">Back to DB</button></a>
-            <form class="bg-secondary p-3" action="{{ url_for('admin.newEntry', usr=session['user']) }}" method="POST">    
-                {{ form.csrf_token }}
-                <div class="form-group mt-2">
-                    <label for="db_Username"><h2 class="text-white">Username:</h2></label>
-                    {{ form.username(class="form-control", placeholder="Username", required="required") }}
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card bg-secondary">
+                            <div class="card-body">
+                                <h2 class="card-title text-white mb-4">Create a New User</h2>
+                                <form action="{{ url_for('admin.newEntry', usr=session['user']) }}" method="POST">
+                                    {{ form.csrf_token }}
+                                    <div class="form-group">
+                                        <label for="username" class="text-white">Username:</label>
+                                        {{ form.username(class="form-control", placeholder="Enter a username", required="required") }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email" class="text-white">Email:</label>
+                                        {{ form.email(class="form-control", placeholder="Enter an email", required="required") }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password" class="text-white">Password:</label>
+                                        {{ form.password(class="form-control", placeholder="Enter a password", required="required") }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="passwordConf" class="text-white">Confirm Password:</label>
+                                        {{ form.passwordConf(class="form-control", placeholder="Confirm your password", required="required") }}
+                                    </div>
+                                    <div class="text-center mt-5">
+                                        <button type="submit" class="btn btn-primary">Create User</button>
+                                        <a href="{{ url_for('admin.database', usr=session['user']) }}" class="btn btn-secondary ml-3">Cancel</a>
+                                    </div>
+                                    <h2 class="text-danger mt-4">{{ error }}</h2>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="db_Email"><h2 class="text-white">Email:</h2></label>
-                    {{ form.email(class="form-control", placeholder="Email", required="required") }}
-                </div>
-                <div class="form-group">
-                    <label for="db_Pass"><h2 class="text-white">Password:</h2></label>
-                    {{ form.password(class="form-control", placeholder="Password", required="required") }}
-                </div>
-                <div class="form-group">
-                    <label for="db_Pass-conf"><h2 class="text-white">Confirm Password:</h2></label>
-                    {{ form.passwordConf(class="form-control", placeholder="Confirm Password", required="required") }}
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="admin">Admin</label>
-                    {{ form.admin(class="text-white") }}
-                </div>                
-                <button id="Submit" class="btn btn-primary">Submit</button>
-                <h2 class="text-white">{{ error }}</h2>
             </div>
         </div>
-        </form>
         {% endblock %}
     </div>
 </body>
+
 </html>

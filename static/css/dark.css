@@ -5,3 +5,16 @@
     color: #FFFFFF;
     text-decoration: underline;
 }
+
+p h1 h2 h3 h4 h5 h6 {
+    -webkit-text-stroke: 2px black;
+}
+.bg-secondary{
+    background-color: #414141 !important;
+}
+.card{
+    border-radius: .3em !important;
+}
+.searchresult{
+    border-radius: .3em !important;
+}

@@ -9,30 +9,31 @@
   {% include 'navbar.html' %}
   {% endblock %}
   {% block content %}
-    <div class="container">
-        <div class="row">
-        <div class="col-10">
-            <div class="card-group">
-                {% if postLen > 0 %}
-                    {% for post in posts %}
-                    <div class="card bg-secondary">
-                        <div class="card-body">
-                            <h4 class="card-title text-white">{{ post.Title }}</h4>
-                            <h5 class="card-subtitle mb-2 text-white">{{ post.Author }}</h5>
-                            <h6 class="card-subtitle mb-2 text-white">{{ post.Date }}</h6>
-                            <p class="card-text text-white">Tags: {{ post.Tags }}</p>
-                            <a href="{{ url_for('content.viewpost', post_id=post._id, usr=post.Author, currentUsr=session['user']) }}" class="card-link text-white">Click to view</a>
-                        </div>
-                    </div>
-                    <br>
-                    {% endfor %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h2 class="text-center mb-4 text-white">Feed</h2>
+        {% if postLen > 0 %}
+          {% for post in posts %}
+            <div class="card mb-3 bg-secondary">
+              <div class="card-body">
+                <h4 class="card-title text-white">{{ post.Title }}</h4>
+                <h5 class="card-subtitle mb-2 text-white">{{ post.Author }}</h5>
+                <h6 class="card-subtitle mb-2 text-white">{{ post.Date }}</h6>
+                <p class="card-text text-white">{{ post.Content|truncate(200) }}</p>
+                <a href="{{ url_for('content.viewpost', post_id=post._id, usr=post.Author, currentUsr=session['user']) }}" class="btn btn-primary">View</a>
+              </div>
             </div>
-            {% else %}
-            <div class="container">
-            <h1 class="text-white text-center">Your feed is empty! Follow some people and it'll fill up!</h1>
-            {% endif %}               
-        </div>
-        </div>
+          {% endfor %}
+        {% else %}
+          <div class="alert alert-warning" role="alert">
+            Your feed is empty! Follow some people and it'll fill up!
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  
     {% endblock %}
 </body>
 </html>

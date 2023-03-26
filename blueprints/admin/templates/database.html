@@ -3,58 +3,128 @@
 <head>
     {% extends 'base.html' %}
     {% block title %}Database{% endblock %}
+    <style>
+        /* Custom styling for buttons */
+        .btn-primary, .btn-info, .btn-warning, .btn-danger {
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+        .btn-info:hover {
+            background-color: #11707b;
+            border-color: #11707b;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #e0a800;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-danger:hover {
+            background-color: #a71d2a;
+            border-color: #a71d2a;
+        }
+    
+        /* Custom styling for table */
+        .table {
+            font-size: 16px;
+        }
+        .table thead th {
+            background-color: #6c757d;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+        }
+        .table tbody tr:nth-of-type(even) {
+            background-color: #f2f2f2;
+        }
+        .table td {
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body class="bg-dark">
     <div class="container-fluid">
     {% block navbar %}
-    {% include 'adminNavbar.html' %}
+    {% include 'navbar.html' %}
     {% endblock %}
     {% block content %}
-        <div class="row mt-4">
-            <div class="col-md-4 col-lg-4 col-xl-4">
-                <a href="newEntry/{{ usr }}"><button type="submit" class="btn btn-primary">New Entry</button></a>           
+    <div class="container-fluid mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-4 col-lg-4 col-xl-4 mb-3">
+                <a href="newEntry/{{ usr }}">
+                    <button type="submit" class="btn btn-primary btn-block">New Entry</button>
+                </a>
             </div>
-            <div class="col-md-4 col-lg-4 col-xl-4">
+            <div class="col-md-4 col-lg-4 col-xl-4 mb-3">
                 <form method="post" action="{{url_for('admin.searchEntry', usr=session['user'])}}">
-                <div class="input-group">
-                    {{ form.csrf_token }}
-                    {{ form.search }}
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">Search</button>
+                    <div class="input-group">
+                        {{ form.csrf_token }}
+                        {{ form.search }}
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </div>
                     </div>
                 </form>
-                </div>
             </div>
         </div>
-        <div id="db_Page" class="mt-4">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th class="text-white">Username</th>
-                        <th class="text-white">Admin</th>
-                        <th class="text-white">ID</th>
-                        <th class="text-white">Blog</th>
-                        <th class="text-white">Edit</th>
-                        <th class ="text-white">Clear Following</th>
-                        <th class="text-white">Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in userList %}
-                    <tr>
-                        <td class="text-white">{{ user.Username }}</td>
-                        <td class="text-white">{{ user.Admin }}</td>
-                        <td class="text-white">{{ user._id }}</td>
-                        <td class="text-white"><a class="userLink" href="{{url_for('content.userHome', currentUsr=session['user'], usr=user.Username)}}">{{ user.Username }}'s Blog</td>
-                        <td><a href="editEntry/{{ usr }}/{{ user.Username }}"><button class="btn btn-info">Edit</button></a></td>
-                        <td><a href="#"><button class="btn btn-warning">Clear following</button></a></td>
-                        <form method="Post" action="{{url_for('admin.deleteEntry', usr=session['user'], usrDelete=user.Username)}}">
-                        <td><button class="btn btn-danger">Delete</button></td>
-                        </form>
-                    </tr>
-                    {%endfor%}
-                </tbody>
-            </table>
+    
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8 col-xl-8">
+                <div id="db_Page" class="mt-4">
+                    <table class="table table-striped">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th class="text-white">Username</th>
+                          <th class="text-white">Admin</th>
+                          <th class="text-white">ID</th>
+                          <th class="text-white">Blog</th>
+                          <th class="text-white">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for user in userList %}
+                        <tr>
+                          <td class="text-white">{{ user.Username }}</td>
+                          <td class="text-white">{{ user.Admin }}</td>
+                          <td class="text-white">{{ user._id }}</td>
+                          <td class="text-white"><a class="userLink" href="{{url_for('content.userHome', currentUsr=session['user'], usr=user.Username)}}">{{ user.Username }}'s Blog</a></td>
+                          <td class="text-center">
+                            <div class="btn-group" role="group">
+                              <a href="editEntry/{{ usr }}/{{ user.Username }}"><button class="btn btn-primary btn-sm mr-1">Edit</button></a>
+                              <a href="#"><button class="btn btn-warning btn-sm mr-1">Clear following</button></a>
+                              <form method="Post" action="{{url_for('admin.deleteEntry', usr=session['user'], usrDelete=user.Username)}}">
+                                <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                              </form>
+                            </div>
+                          </td>
+                        </tr>
+                        {%endfor%}
+                      </tbody>
+                    </table>
+                </div>
+            </div>
     </div>
     {% endblock %}
 </body>

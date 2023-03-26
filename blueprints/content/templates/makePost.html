@@ -16,6 +16,7 @@
         {% include 'navbar.html' %}
         {% endblock %}
         {% block content %}
+        <div class="container">
         {% if editMode == False %}
         <form action="#" method="post">
             {{ form.csrf_token }}

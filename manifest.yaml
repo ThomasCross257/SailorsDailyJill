@@ -4,16 +4,6 @@ metadata:
   name: sailorsdailyjill
 
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: mongo-uri
-  namespace: sailorsdailyjill
-type: Opaque
-data:
-  mongo-uri: <base64 encoded mongo URI>
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -29,9 +19,11 @@ spec:
       labels:
         app: sailorsdailyjill-app
     spec:
+      imagePullSecrets:
+        - name: dockerhub-secret
       containers:
         - name: sailorsdailyjill-app
-          image: sailorsdailyjill-app
+          image: docker.io/thomascross257/sailorsdailyjill:latest
           ports:
             - containerPort: 8000
           env:
@@ -85,6 +77,42 @@ spec:
   selector:
     matchLabels:
       app: sailorsdailyjill-nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sailorsdailyjill-nginx
+    spec:
+      containers:
+        - name: sailorsdailyjill-nginx
+          image: docker.io/thomascross257/sailorsdailyjill:nginx
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          volumeMounts:
+            - name: ssl-certs
+              mountPath: /etc/nginx/ssl
+          env:
+            - name: SERVER_NAME
+              value: "sailorsdailyjill.social"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 60
+      volumes:
+        - name: ssl-certs
+          secret:
+            secretName: ssl-certs
+            optional: false
+
 
 ---
 apiVersion: v1
