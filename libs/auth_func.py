@@ -49,7 +49,7 @@ def registerAccount(username, email, password, passwordConf):
     user_collection.insert_one(new_user)
     return "Success: User created"
 
-def secretCreate():
+def secretCreate(): # Creates a random secret key for each session
     session_secret = secrets.token_hex(16)
     return session_secret
 

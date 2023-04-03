@@ -1,0 +1,2 @@
+docker buildx build  --platform linux/amd64,linux/arm64  --file ./Dockerfile  -t thomascross257/sailors-daily-jill:app  --push  .
+docker buildx build  --platform linux/amd64,linux/arm64  --file ./nginx/Dockerfile  -t thomascross257/sailors-daily-jill:nginx  --push  ./nginx

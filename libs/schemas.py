@@ -1,3 +1,5 @@
+# Description: This file contains the schemas for the database
+
 def newUser(user, password, email, adminPermission, biography):
     new_user ={
         "Username" : user,

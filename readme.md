@@ -146,3 +146,6 @@ services:
     depends_on:
       - app
       ```
+<br>
+<h1>Documentation</h1>
+<p>Documentation can be found at the wiki for this repo, I highly suggest you look into it further before doing anything with the code.</p>
