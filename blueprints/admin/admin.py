@@ -119,3 +119,21 @@ def searchEntry(usr):
         else:
             userList = admin_func.searchUsers(form.search.data)
             return render_template("database.html", usr=session["user"], userList=userList, form=form)
+@admin_bp.route("/database/<usr>/details")
+def usrDetails(usr):
+    if usr != "admin":
+        if "user" in session:
+            return redirect(url_for("content.userHome", usr=session["user"], currentUsr=session["user"]))
+        else:
+            return redirect(url_for("auth.login", usr=default))
+    else:
+        return render_template("details.html", usr=session["user"])
+@admin_bp.route("/database/<usr>/details/posts")
+def usrDetailsPosts(usr):
+    if usr != "admin":
+        if "user" in session:
+            return redirect(url_for("content.userHome", usr=session["user"], currentUsr=session["user"]))
+        else:
+            return redirect(url_for("auth.login", usr=default))
+    else:
+        return render_template("detailsPosts.html", usr=session["user"])
