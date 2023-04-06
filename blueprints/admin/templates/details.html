@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends 'base.html' %}
+    {% block title %}{{user.Username}} Details{% endblock %}
+</head>
+<body class="bg-dark">
+    <div class="container-fluid">
+    {% block navbar %}
+    {% include 'navbar.html' %}
+    {% endblock %}
+    {    {% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-dark text-light">
+                <div class="card-header">{{user.Username}} Details</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Name:</strong>{{ user.Username }}</p>
+                            <p><strong>ID:</strong> {{ user._id }} </p>
+                            <p><strong>Email:</strong> {{ user['Email address'] }}</p>
+                            <p><strong>Admin:</strong> {{ user.Admin }}</p>
+                            <p><strong>Number of Posts:</strong> {{posts_count}} </p>
+                            <p><strong>Infractions:</strong> {{user.Infractions}} </p>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger">Ban User</button>
+                </div>
+            </div>
+        </div>        
+    </div>
+    {% endblock %}
+</div>
+</body>
+</html>
