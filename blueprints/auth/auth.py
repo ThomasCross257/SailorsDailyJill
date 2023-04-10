@@ -28,13 +28,13 @@ def login():
             user_data = user_collection.find_one({'Username': user})
             if user_data and bcrypt.checkpw(password.encode('utf-8'), user_data['Password']):
                 session['user'] = user
-                if remember == True:
+                if remember:
                     session.permanent = True
                 return redirect(url_for('content.userHome', usr=user, currentUsr=session["user"]))
             else:
-                return redirect(url_for('auth.login', usr=default, currentUsr=default, error='Invalid Login Information.'))
+                flash('Invalid Login Information')
         else:
-            return redirect(url_for('auth.login', usr=default, currentUsr=default, error='Invalid Login Information.'))
+            flash('Invalid Login Information')
     else:
         return render_template('login.html', usr=default, currentUsr=default, form=form)
     
