@@ -15,4 +15,4 @@ ENV FLASK_APP=main.py
 ENV FLASK_ENV=production
 ENV MONGO_URI=/app/mongo_uri.txt
 
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "main:app"]
+CMD ["gunicorn", "-w", "1", "--threads", "4", "-b", "0.0.0.0:8000", "main:app"]
