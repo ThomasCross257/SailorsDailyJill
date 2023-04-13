@@ -28,7 +28,10 @@ spec:
             - containerPort: 8000
           env:
             - name: MONGO_URI
-              value: "mongo-uri.txt"
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-uri
+                  key: uri
           resources:
             limits:
               cpu: 1
@@ -65,6 +68,7 @@ spec:
       targetPort: 8000
   type: LoadBalancer
   loadBalancerIP: 192.168.1.245
+  sessionAffinity: ClientIP
 
 ---
 apiVersion: apps/v1
@@ -129,3 +133,4 @@ spec:
       targetPort: 443
   type: LoadBalancer
   loadBalancerIP: 192.168.1.240
+  sessionAffinity: ClientIP
