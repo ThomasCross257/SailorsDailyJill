@@ -37,12 +37,12 @@
                         <div class="row mt-4 d-flex justify-content-end">
                             <div class="col-md-6">
                                 <form method="POST">
+                                    {{ form.csrf_token }}
                                     {% if currentUsr != userPage.Username and currentUsr != None %}
                                         {% if isFollowing == False %}
-                                            <button class="btn btn-primary">Follow</button>
-                                        {% endif %}
-                                        {% if isFollowing == True %}
-                                            <button class="btn btn-danger">Unfollow</button>
+                                        {{ form.followButton (class="btn btn-primary") }}
+                                        {% else %}
+                                        {{ form.unfollowButton (class="btn btn-danger") }}
                                         {% endif %}
                                     {% endif %}
                                 </form>

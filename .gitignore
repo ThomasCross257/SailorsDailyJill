@@ -9,3 +9,4 @@ nginx/*.crt
 nginx/*.key
 mongo-uri.txt
 .DS_Store
+/projectvideo

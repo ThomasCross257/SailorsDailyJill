@@ -9,7 +9,7 @@ from libs.globals import user_collection, post_collection, default, follow_colle
 from pymongo.errors import OperationFailure
 from app import app
 from flask_wtf.csrf import validate_csrf, ValidationError
-from libs.forms import BlogForm, EditProfileForm, SearchForm, DeleteForm
+from libs.forms import BlogForm, EditProfileForm, SearchForm, DeleteForm, FollowForm
 from werkzeug.utils import secure_filename
 import os
 
@@ -22,6 +22,7 @@ todaysDate = date.today().strftime("%m/%d/%y")
 @content_bp.route("/profile/<usr>", methods=["GET", "POST"])
 def userHome(usr):
     userPage = user_collection.find_one({"Username": usr})
+    form = FollowForm()
     if userPage is None:
         abort(404)
     userPosts = post_collection.find({"Author": usr}).limit(5)
@@ -35,6 +36,11 @@ def userHome(usr):
         if request.method == "POST":
             followResult = cl_func.followUser(usr, session["user"])
             if "Success" in followResult:
+                if form.validate_on_submit():
+                    try:
+                        validate_csrf(form.csrf_token.data, app.secret_key)
+                    except ValidationError:
+                        abort(400, 'Invalid CSRF token')
                 if isFollowing == True:
                     flash(f"You unfollowed {usr}.", "success")
                     return redirect(url_for("content.userHome", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"], usr=usr))
@@ -45,9 +51,9 @@ def userHome(usr):
                 flash(followResult)
                 return redirect(url_for("content.userHome", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"], usr=usr))
         else:
-            return render_template("profilePage.html", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"], usr=usr)
+            return render_template("profilePage.html", userPage=userPage, isFollowing=isFollowing, posts=postList, postLen=len(postList), currentUsr=session["user"], usr=usr, form=form)
     else:
-        return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList), currentUsr=default)
+        return render_template("profilePage.html", userPage=userPage, posts=postList, postLen=len(postList), currentUsr=default, form=form)
     
 
 @content_bp.route("/profile/edit-profile/<usr>", methods=["POST", "GET"])
@@ -74,20 +80,18 @@ def editProfile(usr):
                 user["Biography"] = form.bio.data
 
             # check if user has uploaded a new profile picture
-            if form.profilePic.data.filename != '':
-            # Check if the uploaded file is different from the current profile picture
-                if form.profilePic.data.filename != user['Profile Picture']:
-                    # save the uploaded file to the server
-                    filename = secure_filename(form.profilePic.data.filename)
-                    basename, extension = os.path.splitext(filename)
-                    basename = "pfp"
-                    filename = f"{basename}-{user['Username']}{extension}"
-                    file_path = os.path.join(app.root_path, 'static', 'uploads', str(user["_id"]),'pfp', filename)
-                    if not os.path.exists(os.path.dirname(file_path)):
-                        os.makedirs(os.path.dirname(file_path))
-                    form.profilePic.data.save(file_path)    
-                    # update the user's profile picture in the database
-                    user["Profile Picture"] = "uploads/" + str(user["_id"]) + "/pfp/" + filename
+            if form.profilePic.data.filename != '' or user['Profile URL'] == 'static/img/default.png':
+                # save the uploaded file to the server
+                filename = secure_filename(form.profilePic.data.filename)
+                basename, extension = os.path.splitext(filename)
+                basename = "pfp"
+                filename = f"{basename}-{user['Username']}{extension}"
+                file_path = os.path.join(app.root_path, 'static', 'uploads', str(user["_id"]),'pfp', filename)
+                if not os.path.exists(os.path.dirname(file_path)):
+                    os.makedirs(os.path.dirname(file_path))
+                form.profilePic.data.save(file_path)    
+                # update the user's profile picture in the database
+                user["Profile Picture"] = "uploads/" + str(user["_id"]) + "/pfp/" + filename
 
             
             if form.color.data:

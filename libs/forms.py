@@ -60,3 +60,8 @@ class VerifyForm(FlaskForm):
     csrf_token = HiddenField()
     CodeEntry = StringField('Verification Code', validators=[DataRequired(), Length(min=4, max=50)])
     verifyButton = SubmitField('Verify')
+
+class FollowForm(FlaskForm):
+    csrf_token = HiddenField()
+    followButton = SubmitField('Follow')
+    unfollowButton = SubmitField('Unfollow')
